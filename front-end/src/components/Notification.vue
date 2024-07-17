@@ -1,3 +1,7 @@
+<script setup>
+import Subscription from "../subscription/Subscription.js"
+</script>
+
 <template>
 	<div class="container">
 		<div v-for="(item, index) of notifications" :key="index" :class="{'notification': true, 'green': item.color==='green', 'red': item.color==='red', 'yellow': item.color==='yellow'}">
@@ -10,14 +14,21 @@
 export default {
 	data() {
 		return {
-			notifications: [{color:'red', msg:"green notification"}]
+			notifications: []
 		}
-	} 
+	},
+	mounted(){
+		Subscription.subscribe("notification", (args) => {
+			this.notifications.push({color: args[1], msg: args[2]});
+		})
+	}
 }
 </script>
 
 <style scoped>
 .container {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
 	top:0px;
 	right: 0px;
@@ -40,6 +51,6 @@ export default {
 	padding: 1em;
 	border-width: 0px 0px 0px 4px;
 	border-style: solid;
-	margin-bottom: 0.5em;
+	margin-top: 0.5em;
 }
 </style>
