@@ -35,12 +35,13 @@ export default {
 		}
 	},
 	methods: {
-		async register(){
-			Axios.post(`http://localhost:5172/auth/sign-up`,{
+		register(){
+			
+			Axios.post(`http://localhost:5172/auth/sign-up`, {
 				username: this.username,
 				password: this.password,
 				email: this.email
-			})
+			});
 		}
 	}
 }

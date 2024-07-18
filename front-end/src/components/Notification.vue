@@ -10,7 +10,7 @@
 export default {
 	data() {
 		return {
-			notifications: [{color:'red', msg:"green notification"}]
+			notifications: []
 		}
 	} 
 }
