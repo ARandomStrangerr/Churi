@@ -1,6 +1,7 @@
 <script setup>
 	import Veil from "../components/Veil.vue"
 	import Axios from "axios"
+	import Subscription from "../subscription/Subscription.js"
 </script>
 
 <template>
@@ -8,15 +9,15 @@
 		<form @submit.prevent="register">
 			<div class="section">
 				<label for="username">Username</label>
-				<input type="text" v-model="username" id="username" required>
+				<input type="text" v-model="username" id="username">
 			</div>
 			<div class="section">
 				<label for="password">Password</label>
-				<input type="password" v-model="password" id="password" required>
+				<input type="password" v-model="password" id="password">
 			</div>
 			<div class="section">
 				<label for="email">Email</label>
-				<input type="email" v-model="email" id="email" required> 
+				<input type="email" v-model="email" id="email">
 			</div>
 			<button type="submit" class="button submit-button">Register</button>
 		</form>
@@ -24,7 +25,7 @@
 </template>
 
 <script>
-export default { 
+export default {
 	name: "SignUp",
 	inject: ['expressAddress'],
 	data() {
@@ -36,12 +37,26 @@ export default {
 	},
 	methods: {
 		async register(){
+			if (this.username.length === 0){
+				Subscription.notify("notification", "red", "Username must be filled");
+				return;
+			}
+			if (this.password.length ===0){
+				Subscription.notify("notification", "red", "password must be filled");
+				return;
+			}
+			if (this.email.length === 0){
+				Subscription.notify("notification", "red", "email must be filled");
+				return;
+			}
 			Axios.post(`http://localhost:5172/auth/sign-up`,{
 				username: this.username,
 				password: this.password,
 				email: this.email
-			})
+			});
 		}
+	},
+	mounted() {
 	}
 }
 </script>

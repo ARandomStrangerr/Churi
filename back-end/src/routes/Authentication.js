@@ -7,14 +7,17 @@ ROUTER.post("/sign-up", SignUp);
 ROUTER.post("/sign-out", SignOut);
 
 async function SignUp(request, response){
-	console.log(request.body)
-	if (!request.body.username || request.body.username.length === 0 || request.body.password || request.body.password.length === 0 || !request.body.email || request.body.email.length === 0){
-		console.log("empty");
-		return response.status(400).json({error: "Username, Password, and Email are required"});
+	if (!request.body.username || request.body.username.length === 0 || request.body.password || request.body.password.length === 0 || !request.body.email || request.body.email.length === 0) {
+		response.status(400).json({error: "Username, Password, and Email are required"});
+		return;
 	}
 	const salt = await BCRYPT.genSalt(10);
-	const hasedPassword = await BCRYPT.hasedPassword(request.body.password, salt);
-	//push user into database
+	const hashedPassword = await BCRYPT.hasedPassword(request.body.password, salt);
+	if (await DATABASE.signUp(request.body.username, hashedPassword, request.body.email))
+		response.status(200).json({message: "success create account"});
+	else
+		response.status(400).json({message: "failure create account"});
+	return;
 }
 
 function SignIn(request, response){

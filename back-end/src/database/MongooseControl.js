@@ -12,13 +12,18 @@ function connect(hostname, port, database){
 	MONGOOSE.connect(`mongodb://${hostname}:${port}/${database}`);
 }
 
-function signUp(username, hasedPassword, email){
-	let newUser = new USER_MODEL({
-		username: username,
-		password: hasedPassword,
-		email: email
-	});
-	newUser.save();
+async function signUp(username, hasedPassword, email){
+	try {
+		let newUser = new USER_MODEL({
+			username: username,
+			password: hasedPassword,
+			email: email
+		});
+		await newUser.save();
+		return true;
+	} catch (e) {
+		return false;
+	}
 }
 
 function signInUsername(username, password){
