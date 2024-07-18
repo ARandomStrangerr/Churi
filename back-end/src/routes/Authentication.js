@@ -14,9 +14,9 @@ async function SignUp(request, response){
 	const salt = await BCRYPT.genSalt(10);
 	const hashedPassword = await BCRYPT.hash(request.body.password, salt);
 	if (await DATABASE.signUp(request.body.username, hashedPassword, request.body.email))
-		response.status(200).json({message: "success create account"});
+		response.status(200).send("Successfully create and account");
 	else
-		response.status(400).json({message: "failure create account"});
+		response.status(400).send("Failure to create an account");
 	return;
 }
 

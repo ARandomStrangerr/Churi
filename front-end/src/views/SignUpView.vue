@@ -53,6 +53,10 @@ export default {
 				username: this.username,
 				password: this.password,
 				email: this.email
+			}).then((data) => {
+				console.log(data);
+			}).catch((data) => {
+				Subscription.notify("notification","red",data.response.data);
 			});
 		}
 	},
