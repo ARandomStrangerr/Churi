@@ -1,5 +1,4 @@
 const ROUTER = require("express").Router();
-const BCRYPT = require("bcryptjs");
 const DATABASE = require("../database/MongooseControl");
 
 ROUTER.post("/sign-in", SignIn);
@@ -11,9 +10,7 @@ async function SignUp(request, response){
 		response.status(400).json({error: "Username, Password, and Email are required"});
 		return;
 	}
-	const salt = await BCRYPT.genSalt(10);
-	const hashedPassword = await BCRYPT.hash(request.body.password, salt);
-	if (await DATABASE.signUp(request.body.username, hashedPassword, request.body.email))
+	if (await DATABASE.signUp(request.body.username, request.body.password, request.body.email))
 		response.status(200).send("Successfully create and account");
 	else
 		response.status(400).send("Failure to create an account");
@@ -21,7 +18,11 @@ async function SignUp(request, response){
 }
 
 function SignIn(request, response){
-
+	if (!request.body.username || request.body.username.length === 0 || !request.body.password || request.body.password.length === 0){
+		response.status(400).send("Username, and password are required");
+		return;
+	}
+	if ()
 }
 
 function SignOut(request, response){

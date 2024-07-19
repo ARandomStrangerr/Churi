@@ -1,4 +1,5 @@
 const MONGOOSE = require("mongoose");
+const BCRYPT = require("bcryptjs");
 
 const USER_SCHEMA = MONGOOSE.Schema({
 	username:{type: String, unique: true, required: true},
@@ -12,11 +13,13 @@ function connect(hostname, port, database){
 	MONGOOSE.connect(`mongodb://${hostname}:${port}/${database}`);
 }
 
-async function signUp(username, hasedPassword, email){
+async function signUp(username, password, email){
+	const salt = await BCRYPT.genSalt(10);
+	const hashedPassword = await BCRYPT.hash(password, salt);
 	try {
 		let newUser = new USER_MODEL({
 			username: username,
-			password: hasedPassword,
+			password: hashedPassword,
 			email: email
 		});
 		await newUser.save();
