@@ -7,6 +7,9 @@
   font-weight: normal;
 }
 
+button {
+	border:0px;
+}
 .button{
 	cursor: pointer;
 	display: flex;
@@ -23,6 +26,7 @@ body{
 	font-size: 14px;
 	font-family: "Roboto Mono";
 }
+
 svg {
 	width: 2em;
 	height: 2em;

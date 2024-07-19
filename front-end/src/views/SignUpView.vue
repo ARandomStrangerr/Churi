@@ -82,7 +82,7 @@ label {
 
 .submit-button {
 	background-color: #e2ece9;
-	widows: 100%;
+	width: 100%;
 }
 
 .submit-button:hover {
