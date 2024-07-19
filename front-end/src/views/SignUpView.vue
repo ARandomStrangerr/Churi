@@ -49,7 +49,7 @@ export default {
 				Subscription.notify("notification", "red", "email must be filled");
 				return;
 			}
-			Axios.post(`http://localhost:5172/auth/sign-up`,{
+			Axios.post(`${this.expressAddress}/auth/sign-up`,{
 				username: this.username,
 				password: this.password,
 				email: this.email

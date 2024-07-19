@@ -17,12 +17,16 @@ async function SignUp(request, response){
 	return;
 }
 
-function SignIn(request, response){
+async function SignIn(request, response){
 	if (!request.body.username || request.body.username.length === 0 || !request.body.password || request.body.password.length === 0){
 		response.status(400).send("Username, and password are required");
 		return;
 	}
-	if ()
+	if (await DATABASE.signInUsername(request.body.username, request.body.password))
+		response.status(200).send("Successfully login");
+	else
+		response.status(400).send("Incorrect username or password");
+	return;
 }
 
 function SignOut(request, response){

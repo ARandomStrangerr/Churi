@@ -29,8 +29,10 @@ async function signUp(username, password, email){
 	}
 }
 
-function signInUsername(username, password){
-
+async function signInUsername(username, password){
+	const user = await USER_MODEL.findOne({username});
+	if (!username || !(await BCRYPT.compare(password, user.password))) return false;
+	return true;
 }
 
 function signInEmail(email, password){
