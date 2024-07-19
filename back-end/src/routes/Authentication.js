@@ -22,9 +22,11 @@ async function SignIn(request, response){
 		response.status(400).send("Username, and password are required");
 		return;
 	}
-	if (await DATABASE.signInUsername(request.body.username, request.body.password))
+	const returnData = await DATABASE.signInUsername(request.body.username, request.body.password)
+	if (returnData){
+		request.session.id = returnData;
 		response.status(200).send("Successfully login");
-	else
+	} else
 		response.status(400).send("Incorrect username or password");
 	return;
 }

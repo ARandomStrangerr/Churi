@@ -46,9 +46,7 @@ export default {
 			}).then((data) => {
 				console.log(data);
 			}).catch((data) => {
-				console.log(data);
 				Subscription.notify("notification", "red", data.response.data);
-
 			});
 		}
 	}
