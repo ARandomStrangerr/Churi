@@ -1,17 +1,15 @@
 import { defineStore } from "pinia";
+import { inject } from "vue";
+import Axios from "axios";
 
 export const signInState = defineStore("signInState", {
-	state: () => {
-		return {
-			isSignedIn: false
-		}
+	state() {
+		return {}
 	},
 	actions: {
-		signIn() {
-      this.isSignedIn = true;
-		},
-		signOut() {
-      this.isSignedIn = false;
+		async isSignedIn() {
+			const API_ADDR = inject("expressAddress");
+			return (await Axios.get(`${API_ADDR}/auth/is-sign-in`)).data;
 		}
 	}
 })

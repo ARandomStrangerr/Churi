@@ -13,12 +13,10 @@
 			<img src="../assets/logo-1.png" alt="Logo" class="centered-image">
 			<div class="right-sub-container">
 				<ShoppingBagIcon />
-				<div v-if="!signInStateManagement.isSignedIn" class="right-sub-container">
+				<div v-if="isSignedIn">You are signed in!</div>
+				<div v-else class="right-sub-container">
 					<RouterLink to="/sign-up"><div class="button">Sign up</div></RouterLink>
 					<RouterLink to="/sign-in"><div class="button">Sign in</div></RouterLink>
-				</div>
-				<div v-else>
-					SIGN OUT NOW!!!
 				</div>
 			</div>
 		</div>
@@ -31,8 +29,12 @@
 export default {
 	data(){
 		return {
-			signInStateManagement: signInState()
+			isSignedIn: false
 		}
+	},
+	async mounted() {
+		this.isSignedIn = await signInState().isSignedIn();
+		console.log(this.isSignedIn);	
 	}
 }
 </script>

@@ -8,10 +8,13 @@ const DATABASE_CONTROL = require("./src/database/MongooseControl");
 const APP = EXPRESS();
 const PORT = 5172;
 
-APP.use(CORS());
+APP.use(CORS({
+	origin: "http://localhost:5173",
+	credentials: true
+}));
 APP.use(BODY_PARSER.json());
 APP.use(SESSION({
-	secret: "AReallyBadSecret",
+	secret: "thisisnotagoodsecret",
 	resave: false,
 	saveUninitialized: false
 	//session stores data in memory by default, more at: https://expressjs.com/en/resources/middleware/session.html

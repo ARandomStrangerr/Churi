@@ -45,10 +45,8 @@ export default {
 				username: this.username,
 				password: this.password
 			}).then((data) => {
-				const signInStateManagement = signInState();
-        signInStateManagement.signIn();
+				console.log(data.data);
 			}).catch((data) => {
-				console.log(data);
 				Subscription.notify("notification", "red", data.response.data);
 			});
 		}

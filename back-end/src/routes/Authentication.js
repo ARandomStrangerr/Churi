@@ -4,6 +4,7 @@ const DATABASE = require("../database/MongooseControl");
 ROUTER.post("/sign-in", SignIn);
 ROUTER.post("/sign-up", SignUp);
 ROUTER.post("/sign-out", SignOut);
+ROUTER.get("/is-sign-in", IsSignIn);
 
 async function SignUp(request, response){
 	if (!request.body.username || request.body.username.length === 0 || !request.body.password || request.body.password.length === 0 || !request.body.email || request.body.email.length === 0) {
@@ -24,11 +25,15 @@ async function SignIn(request, response){
 	}
 	const returnData = await DATABASE.signInUsername(request.body.username, request.body.password)
 	if (returnData){
-		request.session.id = returnData;
+		request.session.userId = returnData;
 		response.status(200).send("Successfully login");
 	} else
 		response.status(400).send("Incorrect username or password");
 	return;
+}
+
+function IsSignIn(request, response) {
+	request.session.userId ? response.status(200).send(true) : response.status(200).send(false);
 }
 
 function SignOut(request, response){
