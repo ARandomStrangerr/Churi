@@ -1,10 +1,10 @@
 <script setup>
-	import HomePage from "./views/HomePage.vue"
+import { RouterLink, RouterView } from "vue-router"
 </script>
 
 <template>
 	<div class="container">
-		<HomePage />
+		<RouterView />
 	</div>
 </template>
 
@@ -12,5 +12,5 @@
 .container{
 	width: 1200px;
 	min-height: 100vh;
-}	
+}
 </style>
