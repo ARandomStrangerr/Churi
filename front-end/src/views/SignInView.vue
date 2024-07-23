@@ -2,6 +2,7 @@
 import Veil from "../components/Veil.vue"
 import Subscription from "../subscription/Subscription"
 import Axios from "axios";
+import { signInState } from "../stores/SignInState"
 </script>
 
 <template>
@@ -44,8 +45,10 @@ export default {
 				username: this.username,
 				password: this.password
 			}).then((data) => {
-				console.log(data);
+				const signInStateManagement = signInState();
+        signInStateManagement.signIn();
 			}).catch((data) => {
+				console.log(data);
 				Subscription.notify("notification", "red", data.response.data);
 			});
 		}
