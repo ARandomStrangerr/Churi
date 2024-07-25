@@ -3,6 +3,16 @@
 </script>
 
 <template>
-	<Header />
+	<div class="container">
+		<Header />
+	</div>
 </template>
 
+<style scoped>
+.container{
+	width: 1280px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+</style>

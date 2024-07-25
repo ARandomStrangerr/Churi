@@ -25,7 +25,8 @@ async function SignIn(request, response){
 	}
 	const returnData = await DATABASE.signInUsername(request.body.username, request.body.password)
 	if (returnData){
-		request.session.userId = returnData;
+		request.session.userId = returnData.id;
+    request.session.role = returnData.role;
 		response.status(200).send("Successfully login");
 	} else
 		response.status(400).send("Incorrect username or password");

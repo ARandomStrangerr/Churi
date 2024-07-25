@@ -1,5 +1,3 @@
-import java.util.List;
-
 import org.openqa.selenium.*;
 
 public class Automation {
@@ -28,5 +26,10 @@ public class Automation {
 		passwordInput.sendKeys(password);
 		form.submit();
 		return this;
+	}
+
+	public void close() throws InterruptedException{
+		Thread.sleep(waitTime);
+		driver.close();
 	}
 }

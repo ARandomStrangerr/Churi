@@ -3,6 +3,7 @@ const BODY_PARSER = require ("body-parser");
 const CORS = require("cors");
 const SESSION = require("express-session");
 const AUTH_ROUTE = require ("./src/routes/Authentication");
+const USER_MANAGEMENT_ROUTE = require("./src/routes/UserManagement");
 const DATABASE_CONTROL = require("./src/database/MongooseControl");
 
 const APP = EXPRESS();
@@ -21,8 +22,9 @@ APP.use(SESSION({
 }));
 
 APP.use("/auth", AUTH_ROUTE);
+APP.use("/user-management", USER_MANAGEMENT_ROUTE);
 
 APP.listen(PORT, function() {
 	DATABASE_CONTROL.connect("localhost", 27017, "CHURI");
-	console.log(`Listening for connection at port ${PORT}`)
+  console.log(`Listening for connection at port ${PORT}`);
 });

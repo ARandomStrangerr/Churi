@@ -12,6 +12,7 @@ axios.defaults.withCredentials = true;
 const app = createApp(App)
 
 app.provide("expressAddress", "http://localhost:5172")
+app.provide("notification", []);
 
 app.use(createPinia())
 app.use(router)

@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeScreen from "../views/HomePage.vue"
 import SignInScreen from "../views/SignInView.vue"
 import SignUpScreen from "../views/SignUpView.vue"
-import UserListScreen from "../views/UserManagementView.vue";
+import UserManagementScreen from "../views/UserManagementView.vue";
+import UserListComponent from "../components/UserManagementUserList.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,10 +26,16 @@ const router = createRouter({
 		},
 		{
 			path: '/user-management',
-			component: UserListScreen,
-      children: []
+			component: UserManagementScreen,
+			children:[
+				{
+					path: '/user-management/user-list',
+					name: 'UserList',
+					component: UserListComponent
+				}
+			]
 		}
-  ]
+	]
 })
 
 export default router
