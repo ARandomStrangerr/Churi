@@ -17,19 +17,16 @@ public class Automation {
 		return this;
 	}
 
-	public Automation signUp(String username, String password, String email) throws InterruptedException{
-		WebElement signUpButton = driver.findElement(By.id("sign-up"));
-		signUpButton.click();
+	public Automation signIn(String username, String password) throws InterruptedException{
+		WebElement signInButton = driver.findElement(By.cssSelector("[data-test='sign-in-button']"));
+		signInButton.click();
 		Thread.sleep(waitTime);
-		List<WebElement> inputFields = driver.findElements(By.tagName("input"));
-		inputFields.get(0).clear();
-		inputFields.get(0).sendKeys(username);
-		inputFields.get(1).clear();
-		inputFields.get(1).sendKeys(password);
-		inputFields.get(2).clear();
-		inputFields.get(2).sendKeys(email);
-		WebElement logInForm = driver.findElement(By.tagName("form"));
-		logInForm.submit();
+		WebElement usernameInput = driver.findElement(By.cssSelector("[data-test='username-input']")),
+				passwordInput = driver.findElement(By.cssSelector("[data-test='password-input']")),
+				form = driver.findElement(By.tagName("form"));
+		usernameInput.sendKeys(username);
+		passwordInput.sendKeys(password);
+		form.submit();
 		return this;
 	}
 }
