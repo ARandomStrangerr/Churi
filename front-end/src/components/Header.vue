@@ -15,8 +15,8 @@
 				<ShoppingBagIcon />
 				<div v-if="isSignedIn">You are signed in!</div>
 				<div v-else class="right-sub-container">
-					<RouterLink to="/sign-up"><div class="button">Sign up</div></RouterLink>
-					<RouterLink to="/sign-in"><div class="button">Sign in</div></RouterLink>
+					<RouterLink to="/sign-up"><div class="button" data-test="sign-up-button">Sign up</div></RouterLink>
+					<RouterLink to="/sign-in"><div class="button" data-test="sign-in-button">Sign in</div></RouterLink>
 				</div>
 			</div>
 		</div>

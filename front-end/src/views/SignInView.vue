@@ -10,11 +10,11 @@ import { signInState } from "../stores/SignInState"
 		<form @submit.prevent="submit">
 			<div class="section">
 				<p>Username or email</p>
-				<input type="text" v-model="username" id="username">
+				<input type="text" v-model="username" id="username" data-test="username-input">
 			</div>
 			<div class="section">
 				<p>Password</p>
-				<input type="password" v-model="password" id="password">
+				<input type="password" v-model="password" id="password" data-test="password-input">
 			</div>
 			<button class="button section submit-button">Sign In</button>
 		</form>
