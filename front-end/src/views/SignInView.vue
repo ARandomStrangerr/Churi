@@ -46,6 +46,7 @@ export default {
 				password: this.password
 			}).then((data) => {
 				console.log(data.data);
+				this.$router.push("/");
 			}).catch((data) => {
 				Subscription.notify("notification", "red", data.response.data);
 			});
