@@ -7,8 +7,16 @@ const USER_SCHEMA = MONGOOSE.Schema({
 	email:{type: String, unique: true, required: true},
 	role: {type: String, enum: ["admin", "vendor", "employee", "customer"], default: "customer"}
 });
-
 const USER_MODEL = MONGOOSE.model("User",USER_SCHEMA);
+
+const PRODUCT_SCHEMA = MONGOOSE.Schema({
+	userId: {type:MONGOOSE.Schema.Types.ObjectId, ref:"User", require: true},
+	name: {type: String, require: true},
+	img: {type: []},
+	price: {type: Number, require: true},
+	stock: {type: Number, require: true},
+	discount: Number
+})
  /**
  * open a connection to the database with given params
  * @param {String} hostname 

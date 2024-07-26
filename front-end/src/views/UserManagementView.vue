@@ -7,7 +7,7 @@ import { RouterView, RouterLink } from "vue-router";
 <template>
 	<div class="container">
 		<UserManagementSideBar />
-		<div>
+		<div class="content">
 			<UserManagementHeader />
 			<RouterView />
 		</div>
@@ -20,5 +20,9 @@ import { RouterView, RouterLink } from "vue-router";
 	flex-direction: row;
 	width: 100vw;
 	height: 100vh;
+}
+.content {
+	width: 90vw;
+	padding: 1em;
 }
 </style>

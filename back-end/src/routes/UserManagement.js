@@ -3,7 +3,8 @@ const DATABASE = require("../database/MongooseControl");
 
 ROUTER.use(isAuthorized);
 
-ROUTER.get("/get-user-list", isAdmin, getUserList);
+ROUTER.get("/get-user-list", getUserList);
+ROUTER.get("/get-product-list", getProductList);
 
 function isAuthorized(request, response, next){
   if (request.session.userId) next();
@@ -20,6 +21,12 @@ async function getUserList(request, response) {
 	let skip = parseInt(request.query.page) * limit || 0;
 	let result = await DATABASE.getUserList(limit, skip);
 	response.status(200).json(result);
+}
+
+async function getProductList(request, response) {
+	let limit = parseInt(request.query.limit) || 10;
+	let skip = parseInt(request.query.page) * limit || 0;
+	response.status(200).json();
 }
 
 module.exports = ROUTER;
