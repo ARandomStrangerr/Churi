@@ -4,7 +4,8 @@ import SignInScreen from "../views/SignInView.vue"
 import SignUpScreen from "../views/SignUpView.vue"
 import UserManagementScreen from "../views/UserManagementView.vue";
 import UserListComponent from "../components/UserManagementUserList.vue";
-import ProductListComponent from "../components/UserManamentProductList.vue"
+import ProductListComponent from "../components/UserManamentProductList.vue";
+import CreateProductComponenet from "../components/UserManagementCreateProduct.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
 					path: '/user-management/product-list',
 					name: "ProductList",
 					component: ProductListComponent
+				},
+				{
+					path: '/user-management/create-product',
+					name: "CreateProduct",
+					component: CreateProductComponenet
 				}
 			]
 		}

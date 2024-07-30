@@ -34,6 +34,7 @@ input {
 	background-color: transparent;
 	border-width: 0px 0px 2px 0px;
 	border-color: #e2ece9;
+	border-style: solid;
 	font-size: 14px;
 	font-family: "Roboto Mono";
 }
