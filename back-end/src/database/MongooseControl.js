@@ -11,12 +11,15 @@ const USER_MODEL = MONGOOSE.model("User",USER_SCHEMA);
 
 const PRODUCT_SCHEMA = MONGOOSE.Schema({
 	userId: {type:MONGOOSE.Schema.Types.ObjectId, ref:"User", require: true},
-	name: {type: String, require: true},
-	img: {type: []},
-	price: {type: Number, require: true},
-	stock: {type: Number, require: true},
+	name: {type: String},
+	img: {type: [String]},
+	desc: {type: String},
+	price: {type: Number},
+	stock: {type: Number},
 	discount: Number
 })
+const PRODUCT_MODEL = MONGOOSE.model("Product", PRODUCT_SCHEMA);
+
  /**
  * open a connection to the database with given params
  * @param {String} hostname 
@@ -64,7 +67,6 @@ async function signInUsername(username, password){
 }
 
 function signInEmail(email, password){
-
 }
 
  /**
@@ -77,8 +79,27 @@ async function getUserList(limit, skip){
 	return await USER_MODEL.find().skip(skip).limit(limit).select("username email role");
 }
 
+async function createProduct(creatorId, name, imageFileName, price, stock, discount) {
+	try {
+		let newProduct = new PRODUCT_MODEL({
+			userId: creatorId,
+			name: name,
+			img: imageFileName,
+			stock: stock,
+			price: price,
+			discount: discount
+		});
+		newProduct.save();
+		return true;
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
+
 module.exports = {
 	connect: connect,
+	createProduct: createProduct,
 	signUp: signUp,
 	signInUsername: signInUsername,
 	signInEmail: signInEmail,

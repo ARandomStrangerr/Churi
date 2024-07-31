@@ -3,19 +3,22 @@ import AddIcon from "./icons/Add.vue";
 import LeftArrow from "./icons/LeftArrow.vue"
 import RightArrow from "./icons/RightArrow.vue";
 import Cross from "./icons/Cross.vue"
+import Axios from "axios";
 </script>
 
 <template>
-<div class="banner">
+<div>
 	<h1>Create Prodcut</h1>
-	<div class="button green"><AddIcon />Save</div>
 </div>
-<form @submit.prevent="submit">
-	<h2>General Information</h2>
+<form @submit.prevent="submit" enctype="multipart/form-data">
+	<div class="banner">
+		<h2>General Information</h2>
+		<button class="button green" @submit.prevent="submit"><AddIcon />Save</button>
+	</div>	
 	<h3><label for="display-name">Display Name</label></h3>
-	<input type="text" id="display-name">
+	<input type="text" v-model="displayName" id="display-name">
 	<h3><label for="desc">Description</label></h3>
-	<textarea id="desc"></textarea>
+	<textarea id="desc" v-model="description"></textarea>
 	<h2>Product Photo</h2>
 	<div class="image-container flex-row">
 		<div v-for="(imgURL, index) in displayImagesURL" :key=index>
@@ -26,20 +29,27 @@ import Cross from "./icons/Cross.vue"
 		</div>
 		<input type="file" id="image-input" @change="fileInputChange" multiple>	
 	</div>
+	<h2>Pricing</h2>
 </form>
 </template>
 
 <script>
 export default {
+	inject: ["expressAddress"],
 	data(){
 		return {
 			uploadImages: [],
-			displayImagesURL: []
+			displayImagesURL: [],
+			displayName: "",
+			description: "",
+			discount: 0,
+			price: 0
 		}
 	},
 	methods: {
 		fileInputChange(event) {
 			this.uploadImages = Array.from(event.target.files);
+			this.original = event.target.files; 
 			for (let file of event.target.files) {
 				this.displayImagesURL.push(URL.createObjectURL(file));
 			}
@@ -49,18 +59,34 @@ export default {
 			this.displayImagesURL.splice(index, 1);
 		},
 		moveImageLeft(index) {
-			if (index == 0) return;
+			if (index === 0) return;
 			let [rmvEle] = this.uploadImages.splice(index, 1);
 			this.uploadImages.splice(index-1, 0, rmvEle);
 			let [rmvFile] = this.displayImagesURL.splice(index, 1);
 			this.displayImagesURL.splice(index-1, 0, rmvFile);
 		},
 		moveImageRight(index) {
-			if (index == this.uploadImages.length - 1) return;
+			if (index === this.uploadImages.length - 1) return;
 			let [rmvEle] = this.uploadImages.splice(index,1);
-			this.uploadImages.splice(index,0,rmvEle);
-			[rmvEle] = this.displayImagesURL.splice(index,1);
-			this.uploadImages.splice(index,0,rmvEle);
+			this.uploadImages.splice(index + 1 , 0, rmvEle);
+			let [rmvFile] = this.displayImagesURL.splice(index, 1);
+			this.displayImagesURL.splice(index + 1, 0, rmvFile);
+		},
+		submit(){			const formData = new FormData();
+			formData.append("name", this.displayName);
+			this.uploadImages.forEach(file => formData.append("productImage", file));
+			formData.append("description", this.description);
+			formData.append("discount", this.discount);
+			formData.append("price", this.price);
+			Axios.post(`${this.expressAddress}/user-management/create-product`,formData,{
+				headers: {
+					"Content-Type": "mulitpart/form-data"
+				}
+			}).then((data) => {
+				console.log(data);
+			}).catch((data) => {
+				console.log(data);
+			});
 		}
 	}
 }
