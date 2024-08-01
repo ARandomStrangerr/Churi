@@ -3,3 +3,4 @@ node_modules
 .DS_Store
 test/out
 test/test.iml
+back-end/product-image-folder

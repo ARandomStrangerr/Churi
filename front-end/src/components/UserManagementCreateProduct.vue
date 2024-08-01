@@ -30,6 +30,20 @@ import Axios from "axios";
 		<input type="file" id="image-input" @change="fileInputChange" multiple>	
 	</div>
 	<h2>Pricing</h2>
+	<div class="flex-row">
+		<div>
+			<h3>Stock</h3>
+			<input type="number" v-model="stock"value="0">
+		</div>
+		<div>
+			<h3>Price</h3>
+			<input type="number" v-model="price" value="0">
+		</div>
+		<div>
+			<h3>Discount</h3>
+			<input type="number" v-model="discount" value="0">
+		</div>
+	</div>
 </form>
 </template>
 
@@ -42,6 +56,7 @@ export default {
 			displayImagesURL: [],
 			displayName: "",
 			description: "",
+			stock: 0,
 			discount: 0,
 			price: 0
 		}
@@ -72,10 +87,11 @@ export default {
 			let [rmvFile] = this.displayImagesURL.splice(index, 1);
 			this.displayImagesURL.splice(index + 1, 0, rmvFile);
 		},
-		submit(){			const formData = new FormData();
+		submit(){
+			const formData = new FormData();
 			formData.append("name", this.displayName);
 			this.uploadImages.forEach(file => formData.append("productImage", file));
-			formData.append("description", this.description);
+			formData.append("desc", this.description);
 			formData.append("discount", this.discount);
 			formData.append("price", this.price);
 			Axios.post(`${this.expressAddress}/user-management/create-product`,formData,{
@@ -97,6 +113,9 @@ export default {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
+}
+.flex-row {
 	justify-content: space-between;
 }
 .image-container {	

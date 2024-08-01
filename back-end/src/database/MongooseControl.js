@@ -79,12 +79,13 @@ async function getUserList(limit, skip){
 	return await USER_MODEL.find().skip(skip).limit(limit).select("username email role");
 }
 
-async function createProduct(creatorId, name, imageFileName, price, stock, discount) {
+async function createProduct(creatorId, name, imageFileName, desc, price, stock, discount) {
 	try {
 		let newProduct = new PRODUCT_MODEL({
 			userId: creatorId,
 			name: name,
 			img: imageFileName,
+			desc: desc,
 			stock: stock,
 			price: price,
 			discount: discount
