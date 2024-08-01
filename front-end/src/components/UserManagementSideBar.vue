@@ -4,7 +4,7 @@ import { RouterLink } from "vue-router";
 
 <template>
 	<div class="side-bar">
-		<img src="../assets/logo-1.png" alt="logo">
+		<RouterLink to="/"><img src="../assets/logo-1.png" alt="logo"></RouterLink>
 		<RouterLink to="/user-management/user-list">User List</RouterLink>
 		<RouterLink to="/user-management/product-list">Product List</RouterLink>
 	</div>

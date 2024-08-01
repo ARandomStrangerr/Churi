@@ -10,7 +10,7 @@
 	<header>
 		<div class="container">
 			<SearchIcon />
-			<img src="../assets/logo-1.png" alt="Logo" class="centered-image">
+			<RouterLink to="/"><img src="../assets/logo-1.png" alt="Logo" class="centered-image"></RouterLink>
 			<div class="right-sub-container">
 				<ShoppingBagIcon />
 				<div class="drop-container" v-if="isSignedIn">
