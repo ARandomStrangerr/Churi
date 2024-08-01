@@ -9,6 +9,7 @@ const UPLOAD = MULTER({dest: "./product-image-folder"});
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.get("/get-product-list", isAdminOrVendor,getProductList);
 ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("productImage", 10), createProduct);
+ROUTER.get("/get-product", isAdminOrVendor, getProductList);
 
  /**
  * check if the session accessing this route is registered
@@ -41,7 +42,8 @@ async function getUserList(request, response) {
 async function getProductList(request, response) {
 	let limit = parseInt(request.query.limit) || 10;
 	let skip = parseInt(request.query.page) * limit || 0;
-	response.status(200).json();
+	let result = await DATABASE.getProductsList(limit, skip);
+	response.status(200).json(result);
 }
 
  /**

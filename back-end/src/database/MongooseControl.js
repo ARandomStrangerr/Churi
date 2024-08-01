@@ -66,9 +66,6 @@ async function signInUsername(username, password){
 	return { id: user._id, role: user.role };
 }
 
-function signInEmail(email, password){
-}
-
  /**
  * return a number of user that segmented into pages
  * @param {Number} limit: number of user per page
@@ -98,11 +95,15 @@ async function createProduct(creatorId, name, imageFileName, desc, price, stock,
 	}
 }
 
+async function getProductsList(limit, skip) {
+	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("name price stock discount");
+}
+
 module.exports = {
 	connect: connect,
 	createProduct: createProduct,
 	signUp: signUp,
 	signInUsername: signInUsername,
-	signInEmail: signInEmail,
-	getUserList: getUserList
+	getUserList: getUserList,
+	getProductsList: getProductsList
 }
