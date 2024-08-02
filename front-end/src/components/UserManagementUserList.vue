@@ -1,7 +1,9 @@
 <script setup>
 import SearchIcon from "./icons/Search.vue";
 import AddIcon from "./icons/Add.vue";
-import Subscription from "../subscription/Subscription";
+import EditIcon from "./icons/Edit.vue"
+import TrashBinIcon from "./icons/TrashBin.vue"
+import TableComponent from "./Table.vue"
 import Axios from "axios";
 </script>
 
@@ -14,22 +16,7 @@ import Axios from "axios";
 	</div>
 </div>
 <!-- make this table has adjustable rows -->
-<table class="user-table">
-	<tbody>
-		<tr>
-			<td>Username</td>
-			<td>Role</td>
-			<td>Email</td>
-			<td>Make up role</td>
-		</tr>
-		<tr v-for="(user, index) in userList" :key="index">
-			<td>{{user.username}}</td>
-			<td>{{user.role}}</td>
-			<td>{{user.email}}</td>
-			<td></td>
-		</tr>
-	</tbody>
-</table>
+<TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="userList" />
 </template>
 
 <script>
@@ -37,7 +24,9 @@ export default {
 	inject: ["expressAddress"],
 	data() {
 		return {
-			userList: []
+			userList: [],
+			columnName: ["Username", "Role", "Email", "Action"],
+			columnKey: ["username", "role", "email"]
 		}
 	},
 	mounted() {
@@ -57,6 +46,16 @@ export default {
 </script>
 
 <style scoped>
+.user-edit-button {
+	display: inline-flex;
+	width: 2em;
+	height: 2em;
+	border-radius: 4px;
+	margin-right: 1em;
+}
+.user-edit-button:last-child {
+	margin-right: 0px;
+}
 .banner {
 	display: flex;
 	flex-direction: row;

@@ -96,7 +96,7 @@ async function createProduct(creatorId, name, imageFileName, desc, price, stock,
 }
 
 async function getProductsList(limit, skip) {
-	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("name price stock discount");
+	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name price stock discount");
 }
 
 module.exports = {

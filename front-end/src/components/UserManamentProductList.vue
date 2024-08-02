@@ -1,8 +1,9 @@
 <script setup>
 import SearchIcon from "./icons/Search.vue";
 import AddIcon from "./icons/Add.vue"
-import Axios from "axios";
+import TableComponent from "./Table.vue"
 import { RouterLink } from "vue-router";
+import Axios from "axios";
 </script>
 
 <template>
@@ -13,24 +14,7 @@ import { RouterLink } from "vue-router";
 		<RouterLink to="/user-management/create-product"><div class="button green"><AddIcon />Add Product</div></RouterLink>
 	</div>
 </div>
-<table>
-	<tbody>
-		<tr>
-			<td>Name</td>
-			<td>Owner</td>
-			<td>Price</td>
-			<td>Stock</td>
-			<td>Discount</td>
-		</tr>
-		<tr v-for="(product, index) in productList" :key="index">
-			<td>{{ product.name }}</td>
-			<td>{{ product.owner }}</td>
-			<td>{{ product.price }}</td>
-			<td>{{ product.stock }}</td>
-			<td>{{ product.discount }}</td>
-		</tr>
-	</tbody>
-</table>
+<TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="productList"/>
 </template>
 
 <script>
@@ -38,13 +22,16 @@ export default {
 	inject: ["expressAddress"],
 	data() {
 		return {
-			productList: []
+			productList: [],
+			columnName: ["Name", "Owner", "Price", "Stock", "Discount", "Action"],
+			columnKey: ["name", "owner", "price", "stock", "discount"]
 		}
 	},
 	mounted() {
 		Axios.get(`${this.expressAddress}/user-management/get-product-list`, {}
 		).then((data) => {
-			this.productList = data.data;			
+			console.log(data.data);
+			this.productList = data.data;
 		}).catch((data) => {
 			this.$router.push("/sign-in");
 		})
