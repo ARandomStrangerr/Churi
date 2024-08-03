@@ -36,6 +36,10 @@ const router = createRouter({
 					component: UserListComponent
 				},
 				{
+					path: '/user-management/edit-user/:id',
+					name: 'EditUser',
+				},
+				{
 					path: '/user-management/product-list',
 					name: "ProductList",
 					component: ProductListComponent

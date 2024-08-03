@@ -15,8 +15,7 @@ import Axios from "axios";
 		<div class="button green"><AddIcon /> Add user</div>
 	</div>
 </div>
-<!-- make this table has adjustable rows -->
-<TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="userList" />
+<TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="userList"/>
 </template>
 
 <script>
@@ -24,19 +23,23 @@ export default {
 	inject: ["expressAddress"],
 	data() {
 		return {
+			editPath: "edit-user",
+			deletePath: "user-management/delete-user",
 			userList: [],
 			columnName: ["Username", "Role", "Email", "Action"],
 			columnKey: ["username", "role", "email"]
 		}
 	},
 	mounted() {
-		Axios.get(`${this.expressAddress}/user-management/get-user-list`, 
-			{
-				limit: 10,
-				page:0
-			}
-		).then((data)=> {
+		Axios.get(`${this.expressAddress}/user-management/get-user-list`, {
+			limit: 10,
+			page:0
+		}).then((data)=> {
 			this.userList = data.data;
+			for (let i of this.userList){
+				i.deleteURL = `${this.expressAddress}/user-management/delete/${i._id}`;
+				i.editURL = `/user-management/edit-user/${i._id}`;
+			}
 		}).catch((data) => {
 			this.$router.push("/sign-in");
 			//Subscription.notify("notification", "red", data.response.data);

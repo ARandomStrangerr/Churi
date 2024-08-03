@@ -73,7 +73,7 @@ async function signInUsername(username, password){
  * @return an object that create
  */
 async function getUserList(limit, skip){
-	return await USER_MODEL.find().skip(skip).limit(limit).select("username email role");
+	return await USER_MODEL.find().skip(skip).limit(limit).select("_id username email role");
 }
 
 async function createProduct(creatorId, name, imageFileName, desc, price, stock, discount) {

@@ -30,8 +30,11 @@ export default {
 	mounted() {
 		Axios.get(`${this.expressAddress}/user-management/get-product-list`, {}
 		).then((data) => {
-			console.log(data.data);
 			this.productList = data.data;
+			for (let i of this.productList){
+				i.deleteURL = `${this.expressAddress}/user-management/delete-product/${i._id}`;
+				i.editURL = `/user-management/edit-product/${i._id}`;
+			}
 		}).catch((data) => {
 			this.$router.push("/sign-in");
 		})
