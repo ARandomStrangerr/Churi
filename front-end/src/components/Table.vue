@@ -13,10 +13,15 @@ const props = defineProps({
 
 <template>
 	<table>
-		<tbody>
+		<thead>
 			<tr>
-				<th v-for="(name, index) of columnName" :key="index">{{name}}</th>
+				<th v-for="(name, index) of columnName" :key="index">
+					{{name}}
+					<div class="resizer" v-on:mousedown="startResize($event, index)"/>
+				</th>
 			</tr>
+		</thead>
+		<tbody>
 			<tr v-for="(row, index) of tableData" :key="index">
 				<td v-for="(key) in columnKey" :key="key">{{row[key]}}</td>
 				<td>
@@ -28,6 +33,30 @@ const props = defineProps({
 	</table>
 </template>
 
+<script>
+export default {
+	methods: {
+		startResize (e, columnIndex) {
+			const parent = e.target.offsetParent;
+		  const startMousePositionHorizontalAxis = e.clientX;
+		  const columnStarWidth = parseInt(window.getComputedStyle(parent).width, 10);
+		  const onMouseMove = (e) => {
+		    const newWidth = columnStarWidth + (e.clientX - startMousePositionHorizontalAxis);
+		    parent.style.width = `${newWidth}px`;
+		  };
+
+		  const onMouseUp = () => {
+		    document.removeEventListener('mousemove', onMouseMove);
+		    document.removeEventListener('mouseup', onMouseUp);
+		  };
+
+		  document.addEventListener('mousemove', onMouseMove);
+		  document.addEventListener('mouseup', onMouseUp);
+		}
+	}
+}
+
+</script>
 <style scoped>
 .button {
 	display: inline-flex;
@@ -38,5 +67,17 @@ const props = defineProps({
 }
 .button:last-child {
 	margin-right: 0px;
+}
+th{
+	position: relative;
+}
+.resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  background: rgba(0, 0, 0, 0.1);
 }
 </style>
