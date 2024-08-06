@@ -116,8 +116,12 @@ export default {
 		this.productId = routeTokkens[3] ? routeTokkens[3] : null;
 		if (this.productId) {
 			Axios.get(`${this.expressAddress}/user-management/get-product/${this.productId}`
-			).then((data) => {
-				console.log(data);
+			).then((data) => {	
+				this.displayName = data.data.name;
+				this.description = data.data.desc;
+				this.discount = data.data.discount;
+				this.price = data.data.price;
+				this.stock = data.data.stock;
 			}).catch((data) => {
 				console.log(data);
 			})
