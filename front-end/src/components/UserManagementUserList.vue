@@ -5,6 +5,7 @@ import EditIcon from "./icons/Edit.vue"
 import TrashBinIcon from "./icons/TrashBin.vue"
 import TableComponent from "./Table.vue"
 import Axios from "axios";
+import { RouterLink } from "vue-router";
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import Axios from "axios";
 	<div><h1>User Management</h1></div>
 	<div class="flex-row">
 		<div class="search-box"><input type="text" placeholder="Search"><SearchIcon /></div>
-		<div class="button green"><AddIcon /> Add user</div>
+		<RouterLink to="/user-management/create-user"><div class="button green"><AddIcon /> Add user</div></RouterLink>
 	</div>
 </div>
 <TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="userList"/>

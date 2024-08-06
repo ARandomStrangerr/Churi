@@ -9,7 +9,7 @@ const UPLOAD = MULTER({dest: "./product-image-folder"});
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.get("/get-product-list", isAdminOrVendor,getProductList);
 ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("productImage", 10), createProduct);
-ROUTER.get("/get-product", isAdminOrVendor, getProductList);
+ROUTER.get("/get-product/:id", getProduct);
 
  /**
  * check if the session accessing this route is registered
@@ -44,6 +44,13 @@ async function getProductList(request, response) {
 	let skip = parseInt(request.query.page) * limit || 0;
 	let result = await DATABASE.getProductsList(limit, skip);
 	response.status(200).json(result);
+}
+
+async function getProduct(request, response) {
+	let product = await DATABASE.getProduct(request.params.id);
+	if (!product) response.status(404).send("Product not found");
+	else if (product.userId != request.session.userId && request.session.role === "admin") response.status(401).send("This product does not belong to you");
+	else response.status(200).json(product);
 }
 
  /**

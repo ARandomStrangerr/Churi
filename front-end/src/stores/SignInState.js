@@ -12,4 +12,4 @@ export const signInState = defineStore("signInState", {
 			return (await Axios.get(`${API_ADDR}/auth/is-sign-in`)).data;
 		}
 	}
-})
+});

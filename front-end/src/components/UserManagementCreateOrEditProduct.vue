@@ -4,16 +4,17 @@ import LeftArrow from "./icons/LeftArrow.vue"
 import RightArrow from "./icons/RightArrow.vue";
 import Cross from "./icons/Cross.vue"
 import Axios from "axios";
+import { useRoute } from 'vue-router';
 </script>
 
 <template>
 <div>
 	<h1>Create Prodcut</h1>
 </div>
-<form @submit.prevent="submit" enctype="multipart/form-data">
+<form @submit.prevent="this.productId?submit:update" enctype="multipart/form-data">
 	<div class="banner">
 		<h2>General Information</h2>
-		<button class="button green" @submit.prevent="submit"><AddIcon />Save</button>
+		<button class="button green" @submit.prevent="this.productId?submit:update"><AddIcon />Save</button>
 	</div>	
 	<h3><label for="display-name">Display Name</label></h3>
 	<input type="text" v-model="displayName" id="display-name">
@@ -33,7 +34,7 @@ import Axios from "axios";
 	<div class="flex-row">
 		<div>
 			<h3>Stock</h3>
-			<input type="number" v-model="stock"value="0">
+			<input type="number" v-model="stock" value="0">
 		</div>
 		<div>
 			<h3>Price</h3>
@@ -52,6 +53,7 @@ export default {
 	inject: ["expressAddress"],
 	data(){
 		return {
+			productId: null,
 			uploadImages: [],
 			displayImagesURL: [],
 			displayName: "",
@@ -104,6 +106,21 @@ export default {
 			}).catch((data) => {
 				console.log(data);
 			});
+		},
+		update() {
+
+		}
+	},
+	mounted() {
+		const routeTokkens = useRoute().path.split("/");
+		this.productId = routeTokkens[3] ? routeTokkens[3] : null;
+		if (this.productId) {
+			Axios.get(`${this.expressAddress}/user-management/get-product/${this.productId}`
+			).then((data) => {
+				console.log(data);
+			}).catch((data) => {
+				console.log(data);
+			})
 		}
 	}
 }

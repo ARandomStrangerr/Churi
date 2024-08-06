@@ -17,7 +17,7 @@ const props = defineProps({
 			<tr>
 				<th v-for="(name, index) of columnName" :key="index">
 					{{name}}
-					<div class="resizer" v-on:mousedown="startResize($event, index)"/>
+					<div class="resizer" v-if="index < columnName.length - 1" v-on:mousedown="startResize($event, index)"/>
 				</th>
 			</tr>
 		</thead>
@@ -70,6 +70,9 @@ export default {
 }
 th{
 	position: relative;
+}
+th:last-child {
+	width: 90px;
 }
 .resizer {
   position: absolute;

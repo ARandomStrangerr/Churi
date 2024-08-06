@@ -58,6 +58,7 @@ table {
 	/* border-style: solid; */
 	border-width: 1px;
 	border-color: #cddafd;
+	border-collapse: collapse;
 }
 
 td {
@@ -109,7 +110,7 @@ th:last-child {
 }
 
 .green {
-	border-color: #e2ece9;	
+	border-color: #e2ece9;
 }
 
 .green:hover {

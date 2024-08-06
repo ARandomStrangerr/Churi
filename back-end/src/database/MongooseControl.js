@@ -99,11 +99,16 @@ async function getProductsList(limit, skip) {
 	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name price stock discount");
 }
 
+async function getProduct(id) {
+	return await PRODUCT_MODEL.findById(id);
+}
+
 module.exports = {
 	connect: connect,
 	createProduct: createProduct,
 	signUp: signUp,
 	signInUsername: signInUsername,
 	getUserList: getUserList,
-	getProductsList: getProductsList
+	getProductsList: getProductsList,
+	getProduct: getProduct
 }

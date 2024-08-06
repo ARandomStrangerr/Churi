@@ -4,8 +4,9 @@ import SignInScreen from "../views/SignInView.vue"
 import SignUpScreen from "../views/SignUpView.vue"
 import UserManagementScreen from "../views/UserManagementView.vue";
 import UserListComponent from "../components/UserManagementUserList.vue";
-import ProductListComponent from "../components/UserManamentProductList.vue";
-import CreateProductComponenet from "../components/UserManagementCreateProduct.vue";
+import ProductListComponent from "../components/UserManagementProductList.vue";
+import CreateOrEditProductComponenet from "../components/UserManagementCreateOrEditProduct.vue";
+import CreateUserComponent from "../components/UserManagementCreateUser.vue"
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
 					component: UserListComponent
 				},
 				{
+					path: '/user-management/create-user',
+					name: 'CreateUser',
+					component: CreateUserComponent
+				},
+				{
 					path: '/user-management/edit-user/:id',
 					name: 'EditUser',
 				},
@@ -47,7 +53,12 @@ const router = createRouter({
 				{
 					path: '/user-management/create-product',
 					name: "CreateProduct",
-					component: CreateProductComponenet
+					component: CreateOrEditProductComponenet
+				},
+				{
+					path: '/user-management/edit-product/:id',
+					name: "EditProduct",
+					component: CreateOrEditProductComponenet
 				}
 			]
 		}
