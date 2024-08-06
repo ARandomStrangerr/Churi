@@ -5,6 +5,7 @@ import RightArrow from "./icons/RightArrow.vue";
 import Cross from "./icons/Cross.vue"
 import Axios from "axios";
 import { useRoute } from 'vue-router';
+import { notification } from "../stores/Notification.js"
 </script>
 
 <template>
@@ -123,7 +124,8 @@ export default {
 				this.price = data.data.price;
 				this.stock = data.data.stock;
 			}).catch((data) => {
-				console.log(data);
+				console.log(data.response.data);
+				notification().addNotification(data.response.data, "red");
 			})
 		}
 	}

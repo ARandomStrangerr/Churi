@@ -1,11 +1,12 @@
 <script setup>
 import Subscription from "../subscription/Subscription.js"
+import { notification } from "../stores/Notification.js"
 </script>
 
 <template>
 	<div class="container">
-		<div v-for="(item, index) of notifications" :key="index" :class="{'notification': true, 'green': item.color==='green', 'red': item.color==='red', 'yellow': item.color==='yellow'}">
-			{{item.msg}}
+		<div v-for="(item, index) of notification().notificationList" :key="index" :class="{'notification': true, 'green': item.color==='green', 'red': item.color==='red', 'yellow': item.color==='yellow'}" v-on:click="notification().removeNotification(index)">
+			{{ item.message }}
 		</div>
 	</div>
 </template>

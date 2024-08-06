@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 
-export const notifications = defineStore("notification", {
+export const notification = defineStore("notification", {
 	state() {
 		return {
 			notificationList: []
 		}
 	},
-	action: {
+	actions: {
 		addNotification (msg, color) {
 			this.notificationList.push({
 				message: msg,
@@ -14,7 +14,7 @@ export const notifications = defineStore("notification", {
 			});
 		},
 		removeNotification (index) {
-			
+			this.notificationList.splice(index,1);
 		}
 	}
-})
+});
