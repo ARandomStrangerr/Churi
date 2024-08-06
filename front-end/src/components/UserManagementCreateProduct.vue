@@ -92,6 +92,7 @@ export default {
 			formData.append("name", this.displayName);
 			this.uploadImages.forEach(file => formData.append("productImage", file));
 			formData.append("desc", this.description);
+			formData.append("stock", this.stock);
 			formData.append("discount", this.discount);
 			formData.append("price", this.price);
 			Axios.post(`${this.expressAddress}/user-management/create-product`,formData,{
