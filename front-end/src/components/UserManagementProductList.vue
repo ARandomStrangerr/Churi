@@ -3,6 +3,7 @@ import SearchIcon from "./icons/Search.vue";
 import AddIcon from "./icons/Add.vue"
 import TableComponent from "./Table.vue"
 import { RouterLink } from "vue-router";
+import { notification } from "../stores/Notification";
 import Axios from "axios";
 </script>
 
@@ -36,6 +37,7 @@ export default {
 				i.editURL = `/user-management/edit-product/${i._id}`;
 			}
 		}).catch((data) => {
+			notification().addNotification(data.response.data, "red");
 			this.$router.push("/sign-in");
 		})
 	}

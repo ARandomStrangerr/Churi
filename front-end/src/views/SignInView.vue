@@ -1,8 +1,8 @@
 <script setup>
 import Veil from "../components/Veil.vue"
-import Subscription from "../subscription/Subscription"
 import Axios from "axios";
 import { signInState } from "../stores/SignInState"
+import { notification } from "@/stores/Notification";
 </script>
 
 <template>
@@ -34,21 +34,21 @@ export default {
 	methods: {
 		submit () {
 			if (this.username.length === 0) {
-				Subscription.notify("notification", "red", "Username or email must be filled");
+				notification().addNotification("Username must be filled", "red");
 				return;
 			}
 			if (this.password.length === 0) {
-				Subscription.notify("notification", "red", "Password must be filled");
+				notification().addNotification("Password must be filled", "red");
 				return;
 			}
 			Axios.post(`${this.expressAddress}/auth/sign-in`, {
 				username: this.username,
 				password: this.password
 			}).then((data) => {
-				console.log(data.data);
+				notification().addNotification(data.data, "green")
 				this.$router.push("/");
 			}).catch((data) => {
-				Subscription.notify("notification", "red", data.response.data);
+				//Subscription.notify("notification", "red", data.response.data);
 			});
 		}
 	}

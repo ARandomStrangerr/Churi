@@ -1,5 +1,4 @@
 <script setup>
-import Subscription from "../subscription/Subscription.js"
 import { notification } from "../stores/Notification.js"
 </script>
 
@@ -12,18 +11,6 @@ import { notification } from "../stores/Notification.js"
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			notifications: []
-		}
-	},
-	mounted(){
-		Subscription.subscribe("notification", (args) => {
-			this.notifications.push({color: args[1], msg: args[2]});
-		})
-	}
-}
 </script>
 
 <style scoped>

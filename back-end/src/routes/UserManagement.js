@@ -7,7 +7,7 @@ const UPLOAD = MULTER({dest: "./product-image-folder"});
 //ROUTER.use(isAuthorized);
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
-ROUTER.get("/get-product-list", isAdminOrVendor,getProductList);
+ROUTER.get("/get-product-list", isAuthorized, isAdminOrVendor, getProductList);
 ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("productImage", 10), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 
