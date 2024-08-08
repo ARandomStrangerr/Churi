@@ -10,6 +10,7 @@ ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.get("/get-product-list", isAuthorized, isAdminOrVendor, getProductList);
 ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("productImage", 10), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
+ROUTER.patch("/update-product/:id", UPLOAD.array("productImage"), updateProduct);
 
  /**
  * check if the session accessing this route is registered
@@ -68,6 +69,11 @@ async function createProduct(request, response){
 		response.status(200).send("Successfully create product");
 	else
 		response.status(400).send("Failure to create product");
+}
+
+async function updateProduct(request, response){
+	console.log(request.files);
+	console.log(request.body);
 }
 
 module.exports = ROUTER;

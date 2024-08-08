@@ -12,10 +12,10 @@ import { notification } from "../stores/Notification.js"
 <div>
 	<h1>Create Prodcut</h1>
 </div>
-<form @submit.prevent="this.productId?submit:update" enctype="multipart/form-data">
+<form @submit.prevent="submit" enctype="multipart/form-data">
 	<div class="banner">
 		<h2>General Information</h2>
-		<button class="button green" @submit.prevent="this.productId?submit:update"><AddIcon />Save</button>
+		<button class="button green" @submit.prevent="submit"><AddIcon />Save</button>
 	</div>	
 	<h3><label for="display-name">Display Name</label></h3>
 	<input type="text" v-model="displayName" id="display-name">
@@ -23,8 +23,8 @@ import { notification } from "../stores/Notification.js"
 	<textarea id="desc" v-model="description"></textarea>
 	<h2>Product Photo</h2>
 	<div class="image-container flex-row">
-		<div v-for="(imgURL, index) in displayImagesURL" :key=index>
-			<img :src="imgURL">
+		<div v-for="(file, index) in uploadImageFiles" :key=index>
+			<img :src="getFileURL(file)">
 			<div class="left-arrow-button" v-on:click="moveImageLeft(index)"><LeftArrow /></div>
 			<div class="right-arrow-button" v-on:click="moveImageRight(index)"><RightArrow /></div>
 			<div class="cross-button" v-on:click="deleteImage(index)"><Cross /></div>
@@ -55,8 +55,7 @@ export default {
 	data(){
 		return {
 			productId: null,
-			uploadImages: [],
-			displayImagesURL: [],
+			uploadImageFiles: [],
 			displayName: "",
 			description: "",
 			stock: 0,
@@ -66,31 +65,28 @@ export default {
 	},
 	methods: {
 		fileInputChange(event) {
-			this.uploadImages = Array.from(event.target.files);
-			this.original = event.target.files; 
-			for (let file of event.target.files) {
-				this.displayImagesURL.push(URL.createObjectURL(file));
-			}
+			this.uploadImageFiles = Array.from(event.target.files);
 		},
 		deleteImage(index) {
-			this.uploadImages.splice(index, 1);
-			this.displayImagesURL.splice(index, 1);
+			this.uploadImageFiles.splice(index, 1);
 		},
 		moveImageLeft(index) {
 			if (index === 0) return;
-			let [rmvEle] = this.uploadImages.splice(index, 1);
-			this.uploadImages.splice(index-1, 0, rmvEle);
-			let [rmvFile] = this.displayImagesURL.splice(index, 1);
-			this.displayImagesURL.splice(index-1, 0, rmvFile);
+			let [rmvEle] = this.uploadImageFiles.splice(index, 1);
+			this.uploadImageFiles.splice(index-1, 0, rmvEle);
 		},
 		moveImageRight(index) {
 			if (index === this.uploadImages.length - 1) return;
-			let [rmvEle] = this.uploadImages.splice(index,1);
+			let [rmvEle] = this.uploadImageFiles.splice(index,1);
 			this.uploadImages.splice(index + 1 , 0, rmvEle);
-			let [rmvFile] = this.displayImagesURL.splice(index, 1);
-			this.displayImagesURL.splice(index + 1, 0, rmvFile);
 		},
-		submit(){
+		getFileURL (file){
+			return URL.createObjectURL(file);
+		},
+		submit() {
+			this.productId ? this.updateProduct() : this.createProduct();
+		},
+		createProduct(){
 			const formData = new FormData();
 			formData.append("name", this.displayName);
 			this.uploadImages.forEach(file => formData.append("productImage", file));
@@ -108,8 +104,15 @@ export default {
 				console.log(data);
 			});
 		},
-		update() {
-
+		updateProduct() {
+			const formData = new FormData();
+			formData.append("name", this.displayName);
+			formData.append("desc", this.description);
+			formData.append("stock", this.stock);
+			formData.append("discount", this.discount);
+			formData.append("price", this.price);
+			console.log(this.uploadImages);
+			console.log(this.displayImagesURL);
 		}
 	},
 	mounted() {
@@ -117,15 +120,18 @@ export default {
 		this.productId = routeTokkens[3] ? routeTokkens[3] : null;
 		if (this.productId) {
 			Axios.get(`${this.expressAddress}/user-management/get-product/${this.productId}`
-			).then((data) => {	
+			).then((data) => {
 				this.displayName = data.data.name;
 				this.description = data.data.desc;
 				this.discount = data.data.discount;
 				this.price = data.data.price;
 				this.stock = data.data.stock;
+				for (let image of data.data.img) {
+					this.displayImagesURL.push(`${this.expressAddress}/image/products/${image}`);
+				}
 			}).catch((data) => {
-				console.log(data.response.data);
 				notification().addNotification(data.response.data, "red");
+				this.$router.push("/");
 			})
 		}
 	}
