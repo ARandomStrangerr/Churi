@@ -8,9 +8,9 @@ const UPLOAD = MULTER({dest: "./product-image-folder"});
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.get("/get-product-list", isAuthorized, isAdminOrVendor, getProductList);
-ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("productImage", 10), createProduct);
+ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("uploadImageFiles", 10), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
-ROUTER.patch("/update-product/:id", UPLOAD.array("productImage"), updateProduct);
+ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
 
  /**
  * check if the session accessing this route is registered
@@ -23,7 +23,7 @@ function isAuthorized(request, response, next){
   else response.status(401).send("You must be logged in to access User Management page");
 }
 
-function isAdminOrVendor(request, response, next){ 
+function isAdminOrVendor(request, response, next){
 	if (request.session.role === "admin" || request.session.role === "vendor") next();
 	else response.status(401).send("Your role does not have permission for this acction");
 }
@@ -71,9 +71,14 @@ async function createProduct(request, response){
 		response.status(400).send("Failure to create product");
 }
 
-async function updateProduct(request, response){
-	console.log(request.files);
-	console.log(request.body);
+async function updateProduct(request, response) {
+	for (let file of request.files) request.body.imageName[request.body.imageName.indexOf(file.originalname)] = file.filename;
+	let oldImageFileName = await DATABASE.updateProduct(request.params.id, request.body.name, request.body.imageName, request.body.desc, request.body.stock, request.body.prince, request.body.discount);
+	if (oldImageFileName) {
+		response.status(200).send(`Successfully update item ${request.params.id}`);
+	} else {
+		response.status(400).send("Cannot update the item");
+	}
 }
 
 module.exports = ROUTER;

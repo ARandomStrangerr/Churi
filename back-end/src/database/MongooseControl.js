@@ -22,9 +22,9 @@ const PRODUCT_MODEL = MONGOOSE.model("Product", PRODUCT_SCHEMA);
 
  /**
  * open a connection to the database with given params
- * @param {String} hostname 
- * @param {Number} port 
- * @param {String} database 
+ * @param {String} hostname
+ * @param {Number} port
+ * @param {String} database
  */
 function connect(hostname, port, database){
 	MONGOOSE.connect(`mongodb://${hostname}:${port}/${database}`);
@@ -32,9 +32,9 @@ function connect(hostname, port, database){
 
  /**
  * create an user with the given information
- * @param {String} username 
- * @param {String} password 
- * @param {String} email 
+ * @param {String} username
+ * @param {String} password
+ * @param {String} email
  * @returns boolean value which indicates that the user is created or not
  */
 async function signUp(username, password, email){
@@ -56,8 +56,8 @@ async function signUp(username, password, email){
 
  /**
  * check the username and password match any record in the database
- * @param {String} username 
- * @param {String} password 
+ * @param {String} username
+ * @param {String} password
  * @returns an object with userId and their role if the a match found. null otherwise.
  */
 async function signInUsername(username, password){
@@ -95,6 +95,20 @@ async function createProduct(creatorId, name, imageFileName, desc, price, stock,
 	}
 }
 
+async function updateProduct(productId, name, imageFileName, desc, stock, price, discount){
+	let productUpdate = {
+		name: name,
+		img: imageFileName,
+		desc: desc,
+		stock: stock,
+		price: price,
+		discount: discount
+	}
+	const dataBeforeUpdate = await PRODUCT_MODEL.findById(productId);
+	await PRODUCT_MODEL.findByIdAndUpdate(productId, productUpdate, {new: true});
+	return dataBeforeUpdate.img;
+}
+
 async function getProductsList(limit, skip) {
 	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name price stock discount");
 }
@@ -110,5 +124,6 @@ module.exports = {
 	signInUsername: signInUsername,
 	getUserList: getUserList,
 	getProductsList: getProductsList,
-	getProduct: getProduct
+	getProduct: getProduct,
+	updateProduct: updateProduct
 }
