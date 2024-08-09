@@ -101,8 +101,11 @@ export default {
 				}
 			}).then((data) => {
 				console.log(data);
+				notification().addNotification(`Successfully ${this.productId ? "update" : "create"} product`, "green");
+				this.$router.push("/user-management/product-list");
 			}).catch((data) => {
 				console.log(data);
+				notification().addNotification("Failure to create product", "red");
 			});
 		}
 	},
