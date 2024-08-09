@@ -117,6 +117,15 @@ async function getProduct(id) {
 	return await PRODUCT_MODEL.findById(id);
 }
 
+async function deleteProduct(id) {
+	try {
+		return await PRODUCT_MODEL.findByIdAndDelete(id);
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
+
 module.exports = {
 	connect: connect,
 	createProduct: createProduct,
@@ -125,5 +134,6 @@ module.exports = {
 	getUserList: getUserList,
 	getProductsList: getProductsList,
 	getProduct: getProduct,
-	updateProduct: updateProduct
+	updateProduct: updateProduct,
+	deleteProduct: deleteProduct
 }

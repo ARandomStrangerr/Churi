@@ -1,6 +1,8 @@
 const ROUTER = require("express").Router();
 const DATABASE = require("../database/MongooseControl");
 const MULTER = require("multer");
+const FILE_SYSTEM = require("fs");
+const PATH = require("path");
 
 const UPLOAD = MULTER({dest: "./product-image-folder"});
 
@@ -8,9 +10,10 @@ const UPLOAD = MULTER({dest: "./product-image-folder"});
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.get("/get-product-list", isAuthorized, isAdminOrVendor, getProductList);
-ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("uploadImageFiles", 10), createProduct);
+ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("uploadImageFiles"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
+ROUTER.delete("/delete-product/:id", deleteProduct);
 
  /**
  * check if the session accessing this route is registered
@@ -81,4 +84,13 @@ async function updateProduct(request, response) {
 	}
 }
 
+async function deleteProduct(request, response) {
+	const deletedProductData = await DATABASE.deleteProduct(request.params.id);
+	console.log(deletedProductData);
+	if (deletedProductData) {
+		response.status(200).send("Successfully to delete the product");
+		for (let imageFileName of deletedProductData.img) FILE_SYSTEM.unlinkSync(`../../product-image-folder/${imageFileName}`);
+	}
+	else response.status(400).send("Fail to delete the product");
+}
 module.exports = ROUTER;
