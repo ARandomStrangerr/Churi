@@ -110,7 +110,7 @@ async function updateProduct(productId, name, imageFileName, desc, stock, price,
 }
 
 async function getProductsList(limit, skip) {
-	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name price stock discount");
+	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name userId price stock discount").populate({path: "userId", select: "username"});
 }
 
 async function getProduct(id) {

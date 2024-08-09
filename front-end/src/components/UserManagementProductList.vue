@@ -16,7 +16,7 @@ import Axios from "axios";
 	</div>
 </div>
 <TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="productList" @onEdit="onEditItem" @onDelete="onDeleteItem"/>
-<RouterView :message="'Confirm to delete the Item?'" @confirm="onConfirmDialogue" @decline="onDeclineDialogue"/>
+<R56.00outerView :message="'Confirm to delete the Item?'" @confirm="onConfirmDialogue" @decline="onDeclineDialogue"/>
 </template>
 
 <script>
@@ -26,7 +26,7 @@ export default {
 		return {
 			productList: [],
 			columnName: ["Name", "Owner", "Price", "Stock", "Discount", "Action"],
-			columnKey: ["name", "owner", "price", "stock", "discount"]
+			columnKey: ["name", "ownerUsername", "price", "stock", "discount"]
 		}
 	},
 	methods: {
@@ -54,6 +54,8 @@ export default {
 		Axios.get(`${this.expressAddress}/user-management/get-product-list`
 		).then((data) => {
 			this.productList = data.data;
+			for (let product of this.productList) product.ownerUsername = product.userId.username;
+			console.log(data.data);
 		}).catch((data) => {
 			notification().addNotification(data.response.data, "red");
 			this.$router.push("/sign-in");
