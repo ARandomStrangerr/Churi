@@ -2,7 +2,7 @@
 import SearchIcon from "./icons/Search.vue";
 import AddIcon from "./icons/Add.vue"
 import TableComponent from "./Table.vue"
-import { RouterLink } from "vue-router";
+import { RouterLink, RouterView } from "vue-router";
 import { notification } from "../stores/Notification";
 import Axios from "axios";
 </script>
@@ -15,7 +15,8 @@ import Axios from "axios";
 		<RouterLink to="/user-management/create-product"><div class="button green"><AddIcon />Add Product</div></RouterLink>
 	</div>
 </div>
-<TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="productList"/>
+<TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="productList" @onEdit="onEditItem" @onDelete="onDeleteItem"/>
+<RouterView :message="confirmDeleteMessage" @confirm="onConfirmDialogue" @decline="onDeclineDialogue"/>
 </template>
 
 <script>
@@ -23,19 +24,30 @@ export default {
 	inject: ["expressAddress"],
 	data() {
 		return {
+			confirmDeleteMessage: "Confirm to remove the item?",
 			productList: [],
 			columnName: ["Name", "Owner", "Price", "Stock", "Discount", "Action"],
 			columnKey: ["name", "owner", "price", "stock", "discount"]
+		}
+	},
+	methods: {
+		onEditItem(index) {
+			this.confirmDeleteMessage = `Confirm to remove the item: ${this.productList[index].name}`;
+			this.$router.push(`/user-management/edit-product/${this.productList[index]._id}`);
+		},
+		onDeleteItem(index) {
+			this.$router.push(`/user-management/product-list/delete-product/${this.productList[index]._id}`);
+		},
+		onConfirmDialogue() {
+		},
+		onDeclineDialogue() {
+			this.$router.push("/user-management/product-list");
 		}
 	},
 	mounted() {
 		Axios.get(`${this.expressAddress}/user-management/get-product-list`, {}
 		).then((data) => {
 			this.productList = data.data;
-			for (let i of this.productList){
-				i.deleteURL = `${this.expressAddress}/user-management/delete-product/${i._id}`;
-				i.editURL = `/user-management/edit-product/${i._id}`;
-			}
 		}).catch((data) => {
 			notification().addNotification(data.response.data, "red");
 			this.$router.push("/sign-in");

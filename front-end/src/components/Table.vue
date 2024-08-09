@@ -2,7 +2,6 @@
 import EditIcon from "./icons/Edit.vue"
 import TrashBinIcon from "./icons/TrashBin.vue"
 import {defineProps} from "vue";
-import {RouterLink} from "vue-router"
 
 const props = defineProps({
 	columnName: Array,
@@ -25,8 +24,8 @@ const props = defineProps({
 			<tr v-for="(row, index) of tableData" :key="index">
 				<td v-for="(key) in columnKey" :key="key">{{row[key]}}</td>
 				<td>
-					<RouterLink :to="row['editURL']"><div class="button yellow"><EditIcon /></div></RouterLink>
-					<RouterLink :to="row['deleteURL']"><div class="button red"><TrashBinIcon /></div></RouterLink>
+					<div class="button yellow" v-on:click="onEdit(index)"><EditIcon /></div>
+					<div class="button red" v-on:click="onDelete(index)"><TrashBinIcon /></div>
 				</td>
 			</tr>
 		</tbody>
@@ -36,6 +35,12 @@ const props = defineProps({
 <script>
 export default {
 	methods: {
+		onEdit(index) {
+			this.$emit("onEdit", index);	
+		},
+		onDelete(index) {
+			this.$emit("onDelete", index);
+		},
 		startResize (e, columnIndex) {
 			const parent = e.target.offsetParent;
 		  const startMousePositionHorizontalAxis = e.clientX;

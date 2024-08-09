@@ -7,6 +7,7 @@ import UserListComponent from "../components/UserManagementUserList.vue";
 import ProductListComponent from "../components/UserManagementProductList.vue";
 import CreateOrEditProductComponenet from "../components/UserManagementCreateOrEditProduct.vue";
 import CreateUserComponent from "../components/UserManagementCreateUser.vue"
+import ConfirmationDialogeComponent from "../components/ConfirmationDialog.vue"
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,7 +49,14 @@ const router = createRouter({
 				{
 					path: '/user-management/product-list',
 					name: "ProductList",
-					component: ProductListComponent
+					component: ProductListComponent,
+					children: [
+						{
+							path: '/user-management/product-list/delete-product/:id',
+							name: "RemoveProductConfirmation",
+							component: ConfirmationDialogeComponent
+						}
+					]
 				},
 				{
 					path: '/user-management/create-product',
