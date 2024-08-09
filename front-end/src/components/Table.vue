@@ -83,8 +83,8 @@ th:last-child {
   position: absolute;
   right: 0;
   top: 0;
-  width: 5px;
-  height: 100%;
+  width: 1px;
+  height: 80%;
   cursor: col-resize;
   background: rgba(0, 0, 0, 0.1);
 }
