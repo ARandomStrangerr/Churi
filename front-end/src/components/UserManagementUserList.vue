@@ -3,7 +3,7 @@ import SearchIcon from "./icons/Search.vue";
 import AddIcon from "./icons/Add.vue";
 import EditIcon from "./icons/Edit.vue"
 import TrashBinIcon from "./icons/TrashBin.vue"
-import TableComponent from "./Table.vue"
+import TableComponent from "./UserManagementTable.vue"
 import Axios from "axios";
 import { RouterLink } from "vue-router";
 </script>

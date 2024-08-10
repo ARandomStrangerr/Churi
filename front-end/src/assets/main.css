@@ -141,7 +141,13 @@ th:last-child {
 
 	#app {
 		display: flex;
-		justify-content: center;
-		width: 100%;
+		flex-direction: column;
+		align-items: center;
+		min-width: 100vw;
+		min-height: 100vh;
+	}
+
+	.regular-main-page-width{
+		width: 1240px;
 	}
 }

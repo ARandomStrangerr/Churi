@@ -1,7 +1,7 @@
 <script setup>
 import SearchIcon from "./icons/Search.vue";
 import AddIcon from "./icons/Add.vue"
-import TableComponent from "./Table.vue"
+import TableComponent from "./UserManagementTable.vue"
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { notification } from "../stores/Notification";
 import Axios from "axios";
@@ -16,7 +16,7 @@ import Axios from "axios";
 	</div>
 </div>
 <TableComponent :columnName="columnName" :columnKey="columnKey" :tableData="productList" @onEdit="onEditItem" @onDelete="onDeleteItem"/>
-<R56.00outerView :message="'Confirm to delete the Item?'" @confirm="onConfirmDialogue" @decline="onDeclineDialogue"/>
+<RouterView :message="'Confirm to delete the Item?'" @confirm="onConfirmDialogue" @decline="onDeclineDialogue"/>
 </template>
 
 <script>
