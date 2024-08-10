@@ -1,3 +1,3 @@
 <template>
-<div>What is going on here?</div>
+<div class="regular-main-page-width"></div>
 </template>

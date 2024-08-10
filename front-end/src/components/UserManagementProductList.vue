@@ -54,8 +54,6 @@ export default {
 		Axios.get(`${this.expressAddress}/user-management/get-product-list`
 		).then((data) => {
 			this.productList = data.data;
-			for (let product of this.productList) product.ownerUsername = product.userId.username;
-			console.log(data.data);
 		}).catch((data) => {
 			notification().addNotification(data.response.data, "red");
 			this.$router.push("/sign-in");

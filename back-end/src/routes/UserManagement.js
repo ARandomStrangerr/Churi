@@ -9,7 +9,7 @@ const UPLOAD = MULTER({dest: "./product-image-folder"});
 //ROUTER.use(isAuthorized);
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
-ROUTER.get("/get-product-list", isAuthorized, isAdminOrVendor, getProductList);
+ROUTER.get("/get-product-list", isAdminOrVendor, getProductList);
 ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("uploadImageFiles"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
@@ -46,8 +46,12 @@ async function getUserList(request, response) {
 async function getProductList(request, response) {
 	let limit = parseInt(request.query.limit) || 10;
 	let skip = parseInt(request.query.page) * limit || 0;
-	let result = await DATABASE.getProductsList(limit, skip);
-	response.status(200).json(result);
+	let results = await DATABASE.getProductsList(limit, skip);
+	for (let result of results){
+		result.ownerUsername = result.userId.username;
+		delete result.userId;
+	}
+	response.status(200).json(results);
 }
 
 async function getProduct(request, response) {
