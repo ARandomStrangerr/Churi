@@ -2,9 +2,9 @@ const MONGOOSE = require("mongoose");
 const BCRYPT = require("bcryptjs");
 
 const USER_SCHEMA = MONGOOSE.Schema({
-	username:{type: String, unique: true, required: true},
-	password:{type: String, required: true},
-	email:{type: String, unique: true, required: true},
+	username: {type: String, unique: true, required: true},
+	password: {type: String, required: true},
+	email: {type: String, unique: true, required: true},
 	role: {type: String, enum: ["admin", "vendor", "employee", "customer"], default: "customer"}
 });
 const USER_MODEL = MONGOOSE.model("User",USER_SCHEMA);
@@ -16,6 +16,7 @@ const PRODUCT_SCHEMA = MONGOOSE.Schema({
 	desc: {type: String},
 	price: {type: Number},
 	stock: {type: Number},
+	entryDate: {type: Date, default: Date.now},
 	discount: Number
 })
 const PRODUCT_MODEL = MONGOOSE.model("Product", PRODUCT_SCHEMA);
@@ -126,6 +127,10 @@ async function deleteProduct(id) {
 	}
 }
 
+function getProductCard(){
+	return PRODUCT_MODEL.find().select("name price stock img").lean();
+}
+
 module.exports = {
 	connect: connect,
 	createProduct: createProduct,
@@ -135,5 +140,6 @@ module.exports = {
 	getProductsList: getProductsList,
 	getProduct: getProduct,
 	updateProduct: updateProduct,
-	deleteProduct: deleteProduct
+	deleteProduct: deleteProduct,
+	getProductCard: getProductCard
 }

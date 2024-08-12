@@ -5,6 +5,7 @@ const CORS = require("cors");
 const SESSION = require("express-session");
 const AUTH_ROUTE = require ("./src/routes/Authentication");
 const USER_MANAGEMENT_ROUTE = require("./src/routes/UserManagement");
+const STORE_ROUTE = require("./src/routes/Store");
 const DATABASE_CONTROL = require("./src/database/MongooseControl");
 
 const APP = EXPRESS();
@@ -27,6 +28,7 @@ APP.use(EXPRESS.static("product-image-folder"));
 // define Router
 APP.use("/auth", AUTH_ROUTE);
 APP.use("/user-management", USER_MANAGEMENT_ROUTE);
+APP.use("/store/", STORE_ROUTE);
 
 // define global paths
 APP.get("/image/products/:id", serveImage);

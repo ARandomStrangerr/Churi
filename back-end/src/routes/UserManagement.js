@@ -2,11 +2,8 @@ const ROUTER = require("express").Router();
 const DATABASE = require("../database/MongooseControl");
 const MULTER = require("multer");
 const FILE_SYSTEM = require("fs");
-const PATH = require("path");
 
 const UPLOAD = MULTER({dest: "./product-image-folder"});
-
-//ROUTER.use(isAuthorized);
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.get("/get-product-list", isAdminOrVendor, getProductList);
