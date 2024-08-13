@@ -68,6 +68,13 @@ export default {
 				}).catch((data) => {
 					console.log(data.response.data);
 				});
+			else if (tokken[3] === "update-user")
+				Axios.patch(`${this.expressAddress}/user-management/update-user/${tokken[4]}`
+				).then((data) => {
+					console.log(data.data);
+				}).catch((data) => {
+					console.log(data.response.data);
+				});
 		},
 		onDecline() {
 			this.$router.push("/user-management/user-list");
