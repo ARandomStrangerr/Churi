@@ -7,6 +7,11 @@ export const notification = defineStore("notification", {
 		}
 	},
 	actions: {
+		 /**
+		 *
+		 * @param {String} msg: the message to display
+		 * @param {String} color: the color or the notification
+		 */
 		addNotification (msg, color) {
 			this.notificationList.push({
 				message: msg,
