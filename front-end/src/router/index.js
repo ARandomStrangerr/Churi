@@ -42,6 +42,11 @@ const router = createRouter({
 							path: '/user-management/user-list/update-user/:id',
 							name: "ChangeRoleConfirmation",
 							component: ConfirmationDialogeComponent
+						},
+						{
+							path: '/user-management/user-list/delete-user/:id',
+							name: "DeleteUser",
+							component: ConfirmationDialogeComponent
 						}
 					]
 				},

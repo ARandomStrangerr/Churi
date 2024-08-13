@@ -31,16 +31,16 @@ import { RouterLink, RouterView } from "vue-router";
 			<td>{{user.username}}</td>
 			<td>{{user.email}}</td>
 			<td>
-				<SelectorComponent :options="roleOptions" :defaultValue="user.role" @onChange="(newValue) => {changeRole(newValue, index)}"/>
+				<SelectorComponent :options="roleOptions" :defaultValue="user.role" @onChange="(newValue) => {onChangeRole(newValue, index)}"/>
 			</td>
 			<td class="flex-row">
-				<div class="button small-button red"><TrashBinIcon/></div>
+				<div class="button small-button red" @click="onDeleteUser(index)"><TrashBinIcon/></div>
 				<div class="button small-button yellow"><StatisticIcon /></div>
 			</td>
 		</tr>
 	</tbody>
 </table>
-<RouterView :message="displayMessage" @confirm="onConfirmChangeRole" @decline="onDeclineChangeRole"/>
+<RouterView :message="displayMessage" @confirm="onConfirm" @decline="onDecline"/>
 </template>
 
 <script>
@@ -58,16 +58,20 @@ export default {
 		}
 	},
 	methods: {
-		onConfirmChangeRole() {
+		onConfirm() {
 
 		},
-		onDeclineChangeRole() {
+		onDecline() {
 			this.$router.push("/user-management/user-list");
 		},
-		changeRole(newValue, index){
+		onDeleteUser(index) {
+			this.displayMessage = `Confirm to delete user ${this.userList[index].username}?`;
+			this.$router.push(`/user-management/user-list/delete-user/${this.userList[index]._id}`);
+		},
+		onChangeRole(newValue, index){
 			this.displayMessage = `Change role of user ${this.userList[index].username} from ${this.userList[index].role} to ${newValue}?`;
 			this.$router.push(`/user-management/user-list/update-user/${this.userList[index]._id}`);
-		}
+		},
 	},
 	mounted() {
 		Axios.get(`${this.expressAddress}/user-management/get-user-list`, {
@@ -75,10 +79,6 @@ export default {
 			page:0
 		}).then((data)=> {
 			this.userList = data.data;
-			for (let i of this.userList){
-				i.deleteURL = `${this.expressAddress}/user-management/delete/${i._id}`;
-				i.editURL = `/user-management/edit-user/${i._id}`;
-			}
 		}).catch((data) => {
 			console.log(data);
 			this.$router.push("/sign-in");
