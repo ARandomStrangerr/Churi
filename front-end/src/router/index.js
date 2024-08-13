@@ -36,7 +36,14 @@ const router = createRouter({
 				{
 					path: '/user-management/user-list',
 					name: 'UserList',
-					component: UserListComponent
+					component: UserListComponent,
+					children: [
+						{
+							path: '/user-management/user-list/update-user/:id',
+							name: "ChangeRoleConfirmation",
+							component: ConfirmationDialogeComponent
+						}
+					]
 				},
 				{
 					path: '/user-management/create-user',

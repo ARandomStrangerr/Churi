@@ -1,7 +1,6 @@
 <script setup>
 	import Veil from "../components/Veil.vue"
 	import Axios from "axios"
-	import Subscription from "../subscription/Subscription.js"
 </script>
 
 <template>
@@ -38,15 +37,12 @@ export default {
 	methods: {
 		async register(){
 			if (this.username.length === 0){
-				Subscription.notify("notification", "red", "Username must be filled");
 				return;
 			}
 			if (this.password.length ===0){
-				Subscription.notify("notification", "red", "password must be filled");
 				return;
 			}
 			if (this.email.length === 0){
-				Subscription.notify("notification", "red", "email must be filled");
 				return;
 			}
 			Axios.post(`${this.expressAddress}/auth/sign-up`,{
@@ -56,7 +52,6 @@ export default {
 			}).then((data) => {
 				console.log(data);
 			}).catch((data) => {
-				Subscription.notify("notification","red",data.response.data);
 			});
 		}
 	},

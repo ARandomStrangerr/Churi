@@ -33,14 +33,14 @@ svg {
 input {
 	background-color: transparent;
 	border-width: 0px 0px 2px 0px;
-	border-color: #e2ece9;
+	border-color: #bde0fe;
 	border-style: solid;
 	font-size: 14px;
 	font-family: "Roboto Mono";
 }
 
 input:focus {
-	border-color: #bee1e6;
+	border-color: #a2d2ff;
 	outline: none;
 }
 
@@ -55,20 +55,19 @@ table {
 	margin: 1em 0em 3em 0em;
 	width: 100%;
 	border-radius: 1em;
-	/* border-style: solid; */
 	border-width: 1px;
-	border-color: #cddafd;
+	border-color: #bde0fe;
 	border-collapse: collapse;
 }
 
 td {
 	border-width: 0px 0px 1px 0px;
 	border-style: solid;
-	border-color: #edf6f9;
+	border-color: #cdb4db;
 	height: 3em;
 }
 th {
-	background-color: #edf6f9;
+	background-color: #cdb4db;
 	padding-left: 1em;
 	height: 3em;
 }
@@ -91,7 +90,7 @@ th:last-child {
 	flex-direction: row;
 	justify-items: center;
 	align-items: center;
-	border-color: #cddafd;
+	border-color: #cdb4db;
 }
 .search-box svg {
 	width: 1em;
@@ -110,12 +109,12 @@ th:last-child {
 }
 
 .green {
-	border-color: #e2ece9;
+	border-color: #bde0fe;
 }
 
 .green:hover {
-	border-color: #bee1e6;
-	background-color: #bee1e6;
+	border-color: #a2d2ff;
+	background-color: #a2d2ff;
 }
 
 .yellow {
@@ -126,11 +125,11 @@ th:last-child {
 	background-color: #fbecc1;
 }
 .red {
-	border-color: #fde2e4;
+	border-color: #ffc8dd;
 }
 .red:hover {
-	border-color: #fad2e1;
-	background-color: #fad2e1;
+	border-color: #ffafcc;
+	background-color: #ffafcc;
 }
 
 @media (min-width: 1024px) {

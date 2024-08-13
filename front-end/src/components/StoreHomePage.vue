@@ -35,7 +35,6 @@ export default {
 		Axios.get(`${this.expressAddress}/store/get-product-card`
 		).then((data) => {
 			this.newArrivalProducts = data.data;
-			console.log(this.newArrivalProducts);
 		}).catch((data) => {
 			console.log(data);
 		})
