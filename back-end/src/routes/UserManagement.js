@@ -6,6 +6,7 @@ const FILE_SYSTEM = require("fs");
 const UPLOAD = MULTER({dest: "./product-image-folder"});
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
+ROUTER.delete("/delete-user/:id", isAdmin, deleteUser);
 ROUTER.get("/get-product-list", isAdminOrVendor, getProductList);
 ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("uploadImageFiles"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
@@ -38,6 +39,11 @@ async function getUserList(request, response) {
 	let skip = parseInt(request.query.page) * limit || 0;
 	let result = await DATABASE.getUserList(limit, skip);
 	response.status(200).json(result);
+}
+
+async function deleteUser(request, response) {
+	if (await DATABASE.deleteUser(request.params.id)) response.status(200).send("Successfully remove user");
+	else response.status(400).send("Cannot remove user");
 }
 
 async function getProductList(request, response) {

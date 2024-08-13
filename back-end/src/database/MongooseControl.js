@@ -77,6 +77,10 @@ async function getUserList(limit, skip){
 	return await USER_MODEL.find().skip(skip).limit(limit).select("_id username email role");
 }
 
+function deleteUser(id){
+	return USER_MODEL.findByIdAndDelete(id);
+}
+
 async function createProduct(creatorId, name, imageFileName, desc, price, stock, discount) {
 	try {
 		let newProduct = new PRODUCT_MODEL({
@@ -136,6 +140,7 @@ module.exports = {
 	createProduct: createProduct,
 	signUp: signUp,
 	signInUsername: signInUsername,
+	deleteUser: deleteUser,
 	getUserList: getUserList,
 	getProductsList: getProductsList,
 	getProduct: getProduct,

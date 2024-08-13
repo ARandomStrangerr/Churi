@@ -5,6 +5,7 @@ import EditIcon from "./icons/Edit.vue"
 import TrashBinIcon from "./icons/TrashBin.vue"
 import StatisticIcon from "./icons/Statistic.vue"
 import SelectorComponent from "./SelectorComponent.vue";
+import { notification } from "../stores/Notification.js";
 import Axios from "axios";
 import { RouterLink, RouterView } from "vue-router";
 </script>
@@ -50,8 +51,6 @@ export default {
 		return {
 			displayMessage: "",
 			roleOptions: ['admin', 'customer', 'employee', 'vendor'],
-			editPath: "edit-user",
-			deletePath: "user-management/delete-user",
 			userList: [],
 			columnName: ["Username", "Role", "Email", "Action"],
 			columnKey: ["username", "role", "email"]
@@ -59,7 +58,16 @@ export default {
 	},
 	methods: {
 		onConfirm() {
-
+			const tokken = this.$route.path.split("/");
+			console.log(tokken);
+			if (tokken[3] === "delete-user")
+				Axios.delete(`${this.expressAddress}/user-management/delete-user/${tokken[4]}`
+				).then((data) => {
+					notification().addNotification(data.data, "green");
+					this.$router.push("/user-management/user-list");
+				}).catch((data) => {
+					console.log(data.response.data);
+				});
 		},
 		onDecline() {
 			this.$router.push("/user-management/user-list");
@@ -82,8 +90,8 @@ export default {
 		}).catch((data) => {
 			console.log(data);
 			this.$router.push("/sign-in");
-			//Subscription.notify("notification", "red", data.response.data);
-		})
+			
+		});
 	}
 }
 </script>
