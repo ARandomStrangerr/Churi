@@ -119,7 +119,7 @@ async function getProductsList(limit, skip) {
 }
 
 async function getProduct(id) {
-	return await PRODUCT_MODEL.findById(id);
+	return await PRODUCT_MODEL.findById(id).populate("userId").lean();
 }
 
 async function deleteProduct(id) {

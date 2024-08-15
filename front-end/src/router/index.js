@@ -7,8 +7,9 @@ import UserManagementScreen from "../views/UserManagementView.vue";
 import UserListComponent from "../components/UserManagementUserList.vue";
 import ProductListComponent from "../components/UserManagementProductList.vue";
 import CreateOrEditProductComponenet from "../components/UserManagementCreateOrEditProduct.vue";
-import CreateUserComponent from "../components/UserManagementCreateUser.vue"
-import ConfirmationDialogeComponent from "../components/ConfirmationDialog.vue"
+import CreateUserComponent from "../components/UserManagementCreateUser.vue";
+import ConfirmationDialogeComponent from "../components/ConfirmationDialog.vue";
+import SingleItemComponent from "../components/StoreIndividulaProduct.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
 					path: '/sign-in',
 					name: "SignIn",
 					component: SignInScreen
+				},
+				{
+					path: "/product/:id",
+					name: "SingleItemDisplay",
+					component: SingleItemComponent
 				}
 			]
 		},

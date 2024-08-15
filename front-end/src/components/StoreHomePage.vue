@@ -56,7 +56,7 @@ export default {
 	transition: 0.4s;
 }
 .product-card:hover {
-	border-color: #ced4da;
+	border-color: #cdb4db;
 }
 .product-card img {
 	max-width: 100%;
