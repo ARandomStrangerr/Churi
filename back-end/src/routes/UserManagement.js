@@ -3,12 +3,12 @@ const DATABASE = require("../database/MongooseControl");
 const MULTER = require("multer");
 const FILE_SYSTEM = require("fs");
 
-const UPLOAD = MULTER({dest: "./product-image-folder"});
+const UPLOAD = MULTER({dest: "./image-folder/unpublished-product"});
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.delete("/delete-user/:id", isAdmin, deleteUser);
 ROUTER.get("/get-product-list", isAdminOrVendor, getProductList);
-ROUTER.post("/create-product", isAdminOrVendor, UPLOAD.array("uploadImageFiles"), createProduct);
+ROUTER.post("/create-product", UPLOAD.array("uploadFile"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
 ROUTER.delete("/delete-product/:id", deleteProduct);
@@ -73,12 +73,16 @@ async function getProduct(request, response) {
  * price: price of the product
  */
 async function createProduct(request, response){
-	let imgNameList = [];
-	request.files.forEach(file => imgNameList.push(file.filename));
-	if (await DATABASE.createProduct(request.session.userId, request.body.name, imgNameList, request.body.desc, request.body.price, request.body.stock, request.body.discount))
-		response.status(200).send("Successfully create product");
-	else
-		response.status(400).send("Failure to create product");
+	let fileNameIndex = [];
+	request.files.forEach((file) => {fileNameIndex.push(file.originalname)});
+	for (let variantIndex in request.body.variant) {
+		request.body.variant[variantIndex] = JSON.parse(request.body.variant[variantIndex]);
+		for (let fileIndex in request.body.variant[variantIndex].imageFileName) {
+			request.body.variant[variantIndex].imageFileName[fileIndex] = request.files[fileNameIndex.indexOf(request.body.variant[variantIndex].imageFileName[fileIndex])].filename;
+		}
+	}
+	if (await DATABASE.createProduct(request.session.userId, request.body.name, request.body.category, request.body.description, request.body.variant)) response.status(200).send("Successfully create the product");
+	else response.status(400).send("Fail to create the product");
 }
 
 async function updateProduct(request, response) {
