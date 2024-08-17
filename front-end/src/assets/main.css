@@ -7,7 +7,7 @@ button {
 .button{
 	height: 2em;
 	cursor: pointer;
-	display: flex;
+	display: inline-flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
@@ -65,10 +65,10 @@ td {
 	border-style: solid;
 	border-color: #cdb4db;
 	height: 3em;
+	text-align: center;
 }
 th {
 	background-color: #cdb4db;
-	padding-left: 1em;
 	height: 3em;
 }
 th:first-child {
