@@ -7,8 +7,8 @@ const UPLOAD = MULTER({dest: "./image-folder/unpublished-product"});
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.delete("/delete-user/:id", isAdmin, deleteUser);
-ROUTER.get("/get-product-list", isAdminOrVendor, getProductList);
-ROUTER.post("/create-product", UPLOAD.array("uploadFile"), createProduct);
+ROUTER.get("/get-product-list", isAdminOrVendor, getProducts);
+ROUTER.post("/create-product", isAuthorized, isAdminOrVendor, UPLOAD.array("uploadFile"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
 ROUTER.delete("/delete-product/:id", deleteProduct);
@@ -46,13 +46,15 @@ async function deleteUser(request, response) {
 	else response.status(400).send("Cannot remove user");
 }
 
-async function getProductList(request, response) {
+async function getProducts(request, response) {
 	let limit = parseInt(request.query.limit) || 10;
 	let skip = parseInt(request.query.page) * limit || 0;
-	let results = await DATABASE.getProductsList(limit, skip);
+	let results = await DATABASE.getProducts(limit, skip);
 	for (let result of results){
 		result.ownerUsername = result.userId.username;
+		result.variant = result.variant.length;
 		delete result.userId;
+		result.category = result.category.name;
 	}
 	response.status(200).json(results);
 }

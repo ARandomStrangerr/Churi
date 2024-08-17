@@ -15,14 +15,14 @@ const CATEGORY_SCHEMA = MONGOOSE.Schema({
 const CATEGORY_MODEL = MONGOOSE.model("Category", CATEGORY_SCHEMA);
 
 const PRODUCT_SCHEMA = MONGOOSE.Schema({
-	userId: { type:MONGOOSE.Schema.Types.ObjectId, ref:"User", request: true },
+	userId: { type:MONGOOSE.Schema.Types.ObjectId, ref:"User", requied: true },
 	name: { type: String },
 	description: { type: [ String ] },
-	cateogory: { type: MONGOOSE.Schema.Types.ObjectId, ref: "Category" },
+	category: { type: MONGOOSE.Schema.Types.ObjectId, ref: "Category" },
+	published: { type: Boolean, default: false, required: true, enum: [true, false] },
+	variant: [ { type: MONGOOSE.Schema.Types.ObjectId, ref: "Variant" } ],
 	createAt: { type: Date, default: Date.now },
 	updateAt: { type: Date, default: Date.now },
-	published: { type: Boolean, default: false, required: true, enum: [true, false] },
-	variant: [ { type: MONGOOSE.Schema.Types.ObjectId, ref: "Variant" } ]
 });
 const PRODUCT_MODEL = MONGOOSE.model("Product", PRODUCT_SCHEMA);
 
@@ -136,6 +136,11 @@ async function createProduct(creatorId, name, category, description, variant){
 	}
 }
 
+async function getProducts(limit, skip) {
+	let productList = await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name userId category published variant").populate("userId").populate("category").lean();
+	return productList;
+}
+
 async function updateProduct(productId, name, imageFileName, desc, stock, price, discount){
 	let productUpdate = {
 		name: name,
@@ -178,7 +183,7 @@ module.exports = {
 	signInUsername: signInUsername,
 	deleteUser: deleteUser,
 	getUserList: getUserList,
-	getProductsList: getProductsList,
+	getProducts: getProducts,
 	getProduct: getProduct,
 	updateProduct: updateProduct,
 	deleteProduct: deleteProduct,
