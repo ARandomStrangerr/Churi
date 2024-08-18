@@ -10,40 +10,56 @@ import { notification } from "../stores/Notification.js"
 
 <template>
 <div>
-	<h1>Create Prodcut</h1>
+	<h1>Create Product</h1>
 </div>
 <form @submit.prevent="submit" enctype="multipart/form-data">
 	<div class="banner">
 		<h2>General Information</h2>
 		<button class="button green" @submit.prevent="submit"><AddIcon />Save</button>
 	</div>
-	<h3><label for="display-name">Display Name</label></h3>
-	<input type="text" v-model="displayName" id="display-name">
+	<div class="three-one-grid">
+		<div>
+			<h3><label for="display-name">Display Name</label></h3>
+			<input type="text" v-model="name" id="display-name">
+		</div>
+		<div>
+			<h3><label>Category</label></h3>
+			<input type="text" v-model="category">
+		</div>	
+	</div>
 	<h3><label for="desc">Description</label></h3>
 	<textarea id="desc" v-model="description"></textarea>
-	<h2>Product Photo</h2>
-	<div class="image-container flex-row">
-		<div v-for="(file, index) in uploadImageFiles" :key=index>
-			<img :src="getFileURL(file)">
-			<div class="left-arrow-button" v-on:click="moveImageLeft(index)"><LeftArrow /></div>
-			<div class="right-arrow-button" v-on:click="moveImageRight(index)"><RightArrow /></div>
-			<div class="cross-button" v-on:click="deleteImage(index)"><Cross /></div>
-		</div>
-		<input type="file" id="image-input" @change="fileInputChange" multiple>
-	</div>
-	<h2>Pricing</h2>
 	<div class="flex-row">
-		<div>
-			<h3>Stock</h3>
-			<input type="number" v-model="stock" value="0">
+		<h2>Variant</h2>
+		<div class="button green" @click="addVariant"><AddIcon />Add Variant</div>
+	</div>
+	<div class="variant" v-for="(variant, variantIndex) in variants" :key="variantIndex">
+		<h3>Variant Name</h3>
+		<input type="text" v-model="variant.name">
+		<h3>Product Photo</h3>
+		<div class="image-container flex-row">
+			<div v-for="(file, imageIndex) in variant.imageFiles" :key="imageIndex">
+				<img :src="getFileURL(file)">
+				<div class="left-arrow-button" v-on:click="moveImageLeft(variantIndex, imageIndex)"><LeftArrow /></div>
+				<div class="right-arrow-button" v-on:click="moveImageRight(variantIndex, imageIndex)"><RightArrow /></div>
+				<div class="cross-button" v-on:click="deleteImage(variantIndex, imageIndex)"><Cross /></div>
+			</div>
+			<input type="file" id="image-input" @change="fileInputChange($event, variantIndex)" multiple>
 		</div>
-		<div>
-			<h3>Price</h3>
-			<input type="number" v-model="price" value="0">
-		</div>
-		<div>
-			<h3>Discount</h3>
-			<input type="number" v-model="discount" value="0">
+		<h2>Pricing</h2>
+		<div class="flex-row">
+			<div>
+				<h3>Stock</h3>
+				<input type="number" v-model="variant.stock" value="0">
+			</div>
+			<div>
+				<h3>Price</h3>
+				<input type="number" v-model="variant.price" value="0">
+			</div>
+			<div>
+				<h3>Discount</h3>
+				<input type="number" v-model="variant.discount" value="0">
+			</div>
 		</div>
 	</div>
 </form>
@@ -55,47 +71,64 @@ export default {
 	data(){
 		return {
 			productId: null,
-			uploadImageFiles: [],
-			displayName: "",
+			name: "",
+			category: "",
 			description: "",
-			stock: 0,
-			discount: 0,
-			price: 0
+			variants: []
 		}
 	},
 	methods: {
-		fileInputChange(event) {
-			Array.from(event.target.files).forEach(file => this.uploadImageFiles.push(file));
+		addVariant(){
+			this.variants.push({
+				name: "",
+				imageFiles: [],
+				stock: 0,
+				price: 0,
+				discount: 0
+			});
 		},
-		deleteImage(index) {
-			this.uploadImageFiles.splice(index, 1);
+		fileInputChange(event, variantIndex) {
+			for (let file of event.target.files) {
+				this.variants[variantIndex].imageFiles.push(file);
+			}
 		},
-		moveImageLeft(index) {
-			if (index === 0) return;
-			let [rmvEle] = this.uploadImageFiles.splice(index, 1);
-			this.uploadImageFiles.splice(index-1, 0, rmvEle);
+		deleteImage(variantIndex, imageIndex) {
+			this.variants[variantIndex].imageFiles.splice(imageIndex, 1);
 		},
-		moveImageRight(index) {
-			if (index === this.uploadImages.length - 1) return;
-			let [rmvEle] = this.uploadImageFiles.splice(index,1);
-			this.uploadImages.splice(index + 1 , 0, rmvEle);
+		moveImageLeft(variantIndex, imageIndex) {
+			if (imageIndex === 0) return;
+			let [rmvEle] = this.variants[variantIndex].imageFiles.splice(imageIndex, 1);
+			this.variants[variantIndex].imageFiles.splice(imageIndex - 1, 0, rmvEle);
+		},
+		moveImageRight(variantIndex, imageIndex) {
+			if (imageIndex === this.variants[variantIndex].imageFiles.length - 1) return;
+			let [rmvEle] = this.variants[variantIndex].imageFiles.splice(imageIndex,1);
+			this.variants[variantIndex].imageFiles.splice(imageIndex + 1 , 0, rmvEle);
 		},
 		getFileURL (file) {
 			if (typeof file === "object") return URL.createObjectURL(file);
 			return `${this.expressAddress}/image/products/${file}`;
 		},
 		submit() {
-			let URL = this.productId ? `${this.expressAddress}/user-management/update-product/${this.productId}` : `${this.expressAddress}/user-management/create-product`;
-			let method = this.productId ? "patch" : "post";
 			const formData = new FormData();
-			formData.append("name", this.displayName);
-			this.uploadImageFiles.forEach(file => formData.append("uploadImageFiles", file));
-			if (this.productId) this.uploadImageFiles.forEach(file => formData.append("imageName", typeof file === "object" ? file.name : file));
-			formData.append("desc", this.description);
-			formData.append("stock", this.stock);
-			formData.append("discount", this.discount);
-			formData.append("price", this.price);
-			Axios[method](URL, formData, {
+			formData.append("name", this.name);
+			formData.append("category", this.category);
+			formData.append("description", this.description);
+			for (let variant of this.variants) {
+				let temp = {
+					name: variant.name,
+					imageFileName: [],
+					stock: variant.stock,
+					price: variant.price,
+					discount: variant.discount
+				};
+				for (let imageFile of variant.imageFiles){
+					formData.append("uploadFile", imageFile);
+					temp.imageFileName.push(imageFile.name);
+				}
+				formData.append("variant[]", JSON.stringify(temp));
+			}
+			Axios[this.productId ? "patch" : "post"](this.productId ? `${this.expressAddress}/user-management/update-product/${this.productId}` : `${this.expressAddress}/user-management/create-product`, formData, {
 				headers: {
 					"Content-Type": "mulitpart/form-data"
 				}
@@ -212,5 +245,11 @@ textarea{
 textarea:focus{
 	border-color: #bee1e6;
 	outline: none;
+}
+.variant {
+	border-style: solid;
+	border-width: 0px 0px 1px 0px;
+	border-color: #cdb4db;
+	padding-bottom: 1em;
 }
 </style>
