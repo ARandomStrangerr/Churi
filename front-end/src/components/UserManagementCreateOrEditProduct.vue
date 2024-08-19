@@ -10,7 +10,7 @@ import { notification } from "../stores/Notification.js"
 
 <template>
 <div>
-	<h1>Create Product</h1>
+	<h1>{{ productId ? `Update Product ${productId}` : `Create Product` }}</h1>
 </div>
 <form @submit.prevent="submit" enctype="multipart/form-data">
 	<div class="banner">
@@ -81,7 +81,7 @@ export default {
 		addVariant(){
 			this.variants.push({
 				name: "",
-				imageFiles: [],
+				imageFile: [],
 				stock: 0,
 				price: 0,
 				discount: 0
@@ -148,12 +148,15 @@ export default {
 		if (this.productId) {
 			Axios.get(`${this.expressAddress}/user-management/get-product/${this.productId}`
 			).then((data) => {
-				this.displayName = data.data.name;
-				this.description = data.data.desc;
-				this.discount = data.data.discount;
-				this.price = data.data.price;
-				this.stock = data.data.stock;
-				this.uploadImageFiles = data.data.img;
+				this.name = data.data.name;
+				this.category = data.data.category;
+				this.description = data.data.description;
+				this.variants = data.data.variant;
+				for (let variant of this.variants) {
+					variant.imageFiles = variant.image;
+					delete variant.image;
+				}
+				console.log(this.variants);
 			}).catch((data) => {
 				console.log(data)
 				notification().addNotification(data.response.data, "red");

@@ -155,12 +155,8 @@ async function updateProduct(productId, name, imageFileName, desc, stock, price,
 	return dataBeforeUpdate.img;
 }
 
-async function getProductsList(limit, skip) {
-	return await PRODUCT_MODEL.find().skip(skip).limit(limit).select("_id name userId price stock discount").populate({path: "userId", select: "username"}).lean();
-}
-
 async function getProduct(id) {
-	return await PRODUCT_MODEL.findById(id).populate("userId").lean();
+	return await PRODUCT_MODEL.findById(id).select("userId name cateogry description variant").populate("userId variant category").lean();
 }
 
 async function deleteProduct(id) {

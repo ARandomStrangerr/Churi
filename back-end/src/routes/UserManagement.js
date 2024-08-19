@@ -63,7 +63,11 @@ async function getProduct(request, response) {
 	let product = await DATABASE.getProduct(request.params.id);
 	if (!product) response.status(404).send("Product not found");
 	else if (product.userId != request.session.userId && request.session.role != "admin") response.status(401).send("This product does not belong to you");
-	else response.status(200).json(product);
+	else {
+		product.category = product.category.name;
+		product.owner = product.userId.username;
+		response.status(200).json(product);
+	}
 }
 
  /**
