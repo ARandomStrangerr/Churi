@@ -1,9 +1,13 @@
-const ROUTER = require("express").Router();
+const EXPRESS = require("express");
 const DATABASE = require("../database/MongooseControl");
 const MULTER = require("multer");
 const FILE_SYSTEM = require("fs");
+const PATH = require("path");
 
+const ROUTER = EXPRESS.Router();
 const UPLOAD = MULTER({dest: "./image-folder/unpublished-product"});
+
+ROUTER.use(EXPRESS.static("../image-folder/unpublished-product"));
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.delete("/delete-user/:id", isAdmin, deleteUser);
@@ -12,6 +16,7 @@ ROUTER.post("/create-product", isAuthorized, isAdminOrVendor, UPLOAD.array("uplo
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
 ROUTER.delete("/delete-product/:id", deleteProduct);
+ROUTER.get("/get-image/:id", isAdminOrVendor, serveImage);
 
  /**
  * check if the session accessing this route is registered
@@ -111,3 +116,7 @@ async function deleteProduct(request, response) {
 	else response.status(400).send("Fail to delete the product");
 }
 module.exports = ROUTER;
+
+async function serveImage(request, response) {
+	response.sendFile(PATH.join(__dirname, "..", "..", "image-folder", "unpublished-product", request.params.id));
+}

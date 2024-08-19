@@ -107,7 +107,7 @@ export default {
 		},
 		getFileURL (file) {
 			if (typeof file === "object") return URL.createObjectURL(file);
-			return `${this.expressAddress}/image/products/${file}`;
+			return `${this.expressAddress}/user-management/get-image/${file}`;
 		},
 		submit() {
 			const formData = new FormData();

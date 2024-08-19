@@ -30,15 +30,7 @@ APP.use("/auth", AUTH_ROUTE);
 APP.use("/user-management", USER_MANAGEMENT_ROUTE);
 APP.use("/store/", STORE_ROUTE);
 
-// define global paths
-APP.get("/image/products/:id", serveImage);
-
 APP.listen(PORT, function() {
 	DATABASE_CONTROL.connect("localhost", 27017, "CHURI");
   console.log(`Listening for connection at port ${PORT}`);
 });
-
-function serveImage(request, response) {
-	const FILE_PATH = PATH.join(__dirname, "product-image-folder", request.params.id);
-	response.sendFile(FILE_PATH);
-}

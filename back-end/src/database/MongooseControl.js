@@ -30,7 +30,7 @@ const VARIANT_SCHEMA = MONGOOSE.Schema({
 	productId: { type:MONGOOSE.Schema.Types.ObjectId, ref:"Product", required: true },
 	name: { type: String },
 	image: { type: [ String ]},
-	prince: { type: Number },
+	price: { type: Number },
 	stock: { type: Number },
 	discount: { type: Number }
 });
