@@ -74,7 +74,13 @@ const router = createRouter({
 							path: '/user-management/product-list/delete-product/:id',
 							name: "RemoveProductConfirmation",
 							component: ConfirmationDialogeComponent
+						},
+						{
+							path: '/user-management/product-list/change-publication-status/:id',
+							name: "ChanePublicationStatus",
+							component: ConfirmationDialogeComponent
 						}
+
 					]
 				},
 				{

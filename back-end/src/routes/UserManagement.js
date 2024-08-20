@@ -8,6 +8,7 @@ const ROUTER = EXPRESS.Router();
 const UPLOAD = MULTER({dest: "./image-folder/unpublished-product"});
 
 ROUTER.use(EXPRESS.static("../image-folder/unpublished-product"));
+ROUTER.use(EXPRESS.static("../image-folder/published-product"));
 
 ROUTER.get("/get-user-list", isAdmin,getUserList);
 ROUTER.delete("/delete-user/:id", isAdmin, deleteUser);
@@ -16,7 +17,7 @@ ROUTER.post("/create-product", isAuthorized, isAdminOrVendor, UPLOAD.array("uplo
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
 ROUTER.delete("/delete-product/:id", deleteProduct);
-ROUTER.get("/get-image/:id", isAdminOrVendor, serveImage);
+ROUTER.get("/get-image/:productId/:id", isAdminOrVendor, getImage);
 
  /**
  * check if the session accessing this route is registered
@@ -65,7 +66,7 @@ async function getProducts(request, response) {
 }
 
 async function getProduct(request, response) {
-	let product = await DATABASE.getProduct(request.params.id);
+	let product = await DATABASE.getProduct(request.params.id, "_id userId name description category variant","userId category variant");
 	if (!product) response.status(404).send("Product not found");
 	else if (product.userId != request.session.userId && request.session.role != "admin") response.status(401).send("This product does not belong to you");
 	else {
@@ -73,6 +74,14 @@ async function getProduct(request, response) {
 		product.owner = product.userId.username;
 		response.status(200).json(product);
 	}
+}
+
+async function getImage(request, response) {
+	let product = await DATABASE.getProduct(request.params.productId, "_id userId published", "");
+	if (request.session.role != "admin" && request.session.userId != product.userId)
+		response.status(403).send("You do not have the right to view this image");
+	else
+		response.sendFile(PATH.join(__dirname, "..", "..", "image-folder", product.published?"published-product":"unpublished-product", request.params.id));
 }
 
 async function createProduct(request, response){
@@ -113,10 +122,6 @@ async function deleteProduct(request, response) {
 		for (let imageFileName of deletedProductData.img) FILE_SYSTEM.unlinkSync(`../../product-image-folder/${imageFileName}`);
 	}
 	else response.status(400).send("Fail to delete the product");
-}
-
-async function serveImage(request, response) {
-	response.sendFile(PATH.join(__dirname, "..", "..", "image-folder", "unpublished-product", request.params.id));
 }
 
 module.exports = ROUTER;

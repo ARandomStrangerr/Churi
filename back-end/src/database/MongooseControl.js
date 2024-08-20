@@ -121,8 +121,8 @@ async function getProducts(limit, skip) {
 	return productList;
 }
 
-async function getProduct(id) {
-	return await PRODUCT_MODEL.findById(id).select("userId name cateogry description variant").populate("userId variant category").lean();
+async function getProduct(id, field, populateField) {
+	return await PRODUCT_MODEL.findById(id).select(field).populate(populateField).lean();
 }
 
 function getProductCard(){

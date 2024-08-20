@@ -35,8 +35,8 @@ import Axios from "axios";
 			<td>{{ product.ownerUsername }}</td>
 			<td>{{ product.category }}</td>
 			<td>
-				<div class="toggle-button" @click="toggle(index)">
-					<div class="slider" ref="toggle-highlight"></div>
+				<div class="toggle-button" @click="togglePublicationStatus(index)">
+					<div :class="{'slider':true, 'right':!product.published}" ref="toggle-highlight"></div>
 					<div class="display-text">Published</div>
 					<div class="display-text">Unpublished</div>
 				</div>
@@ -70,20 +70,30 @@ export default {
 			this.$router.push(`/user-management/product-list/delete-product/${this.productList[index]._id}`);
 		},
 		onConfirmDialogue() {
-			const productId = this.$route.path.split("/")[4];
+			const tokkens = this.$route.path.split("/");
 			this.$router.push("/user-management/product-list");
-			Axios.delete(`${this.expressAddress}/user-management/delete-product/${productId}`
-			).then((data) => {
-				notification().addNotification(data.data, "green");
-			}).catch((data) => {
-				notification().addNotification(data.response.data, "red");
-			});
+			if (tokkens[3] === "delete Product")
+				Axios.delete(`${this.expressAddress}/user-management/delete-product/${tokkens[4]}`
+				).then((data) => {
+					notification().addNotification(data.data, "green");
+				}).catch((data) => {
+					notification().addNotification(data.response.data, "red");
+				});
+			else
+				Axios.put(`${this.expressAddress}/user-management/change-publication-status/${tokkens[4]}}`
+				).then((data) => {
+
+				}).catch((data) => {
+
+				});
 		},
 		onDeclineDialogue() {
 			this.$router.push("/user-management/product-list");
 		},
-		toggle(index){
-			console.log( this.$refs["toggle-highlight"][index].classList.toggle("right"));
+		togglePublicationStatus(index){
+			this.message = `Confirm to change the publication status of ${this.productList[index]._id} - ${this.productList[index].name}?`;
+			this.$router.push(`/user-management/product-list/change-publication-status/${this.productList[index]._id}`);
+			// this.$refs["toggle-highlight"][index].classList.toggle("right");
 		}
 	},
 	mounted() {

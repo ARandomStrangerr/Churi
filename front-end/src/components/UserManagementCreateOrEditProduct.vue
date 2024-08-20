@@ -107,7 +107,7 @@ export default {
 		},
 		getFileURL (file) {
 			if (typeof file === "object") return URL.createObjectURL(file);
-			return `${this.expressAddress}/user-management/get-image/${file}`;
+			return `${this.expressAddress}/user-management/get-image/${this.productId}/${file}`;
 		},
 		submit() {
 			const formData = new FormData();
@@ -158,7 +158,6 @@ export default {
 					variant.imageFiles = variant.image;
 					delete variant.image;
 				}
-				console.log(this.variants);
 			}).catch((data) => {
 				console.log(data)
 				notification().addNotification(data.response.data, "red");
