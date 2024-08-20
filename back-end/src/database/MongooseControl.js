@@ -132,10 +132,11 @@ function getProductCard(){
 async function updateProduct(productId, name, published, cateogry, description, variant) {
 	let updateProductObject = {};
 	if (name) updateProductObject.name = name;
-	if (published) updateProductObject.published = published;
+	if (published != null) updateProductObject.published = published;
 	if (cateogry) updateProductObject.category= cateogry;
 	if (description) updateProductObject.description = description;
 	if (variant) updateProductObject.variant = variant;
+	console.log(updateProductObject);
 	const dataBeforeUpdate = await PRODUCT_MODEL.findById(productId).populate("userId variant").lean();
 	await PRODUCT_MODEL.findByIdAndUpdate(productId,updateProductObject, { new: true });
 	return dataBeforeUpdate;

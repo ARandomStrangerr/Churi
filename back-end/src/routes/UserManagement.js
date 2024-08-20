@@ -117,7 +117,8 @@ async function updateProduct(request, response) {
 
 async function updateProductPublication(request, response) {
 	let productPublication = await DATABASE.getProduct(request.params.id, "published variant", "variant");
-	DATABASE.updateProduct(request.params.id, null, !productPublication.published, null, null, null);
+	console.log(productPublication.published);
+	await DATABASE.updateProduct(request.params.id, null, !productPublication.published, null, null, null);
 	for (let variant of productPublication.variant)
 		for (let file of variant.image)
 			FILE_SYSTEM.renameSync(PATH.join(__dirname, "..", "..", "image-folder", productPublication.published?"published-product":"unpublished-product", file), PATH.join(__dirname, "..", "..", "image-folder", productPublication.published?"unpublished-product":"published-product", file));

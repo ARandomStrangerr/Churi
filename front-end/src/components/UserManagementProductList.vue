@@ -101,7 +101,6 @@ export default {
 	mounted() {
 		Axios.get(`${this.expressAddress}/user-management/get-product-list`
 		).then((data) => {
-			console.log(data.data);
 			this.productList = data.data;
 		}).catch((data) => {
 			notification().addNotification(data.response.data, "red");
