@@ -34,7 +34,13 @@ import Axios from "axios";
 			<td>{{ product.name }}</td>
 			<td>{{ product.ownerUsername }}</td>
 			<td>{{ product.category }}</td>
-			<td>{{ product.published }}</td>
+			<td>
+				<div class="toggle-button" @click="toggle(index)">
+					<div class="slider" ref="toggle-highlight"></div>
+					<div class="display-text">Published</div>
+					<div class="display-text">Unpublished</div>
+				</div>
+			</td>
 			<td>{{ product.variant }}</td>
 			<td>
 				<div class="button yellow" @click="onEditItem(index)"><EditIcon /></div>
@@ -75,6 +81,9 @@ export default {
 		},
 		onDeclineDialogue() {
 			this.$router.push("/user-management/product-list");
+		},
+		toggle(index){
+			console.log( this.$refs["toggle-highlight"][index].classList.toggle("right"));
 		}
 	},
 	mounted() {
@@ -110,5 +119,34 @@ export default {
 }
 .button:last-child{
 	margin-right: 0px;
+}
+.toggle-button {
+	background-color: #e9ecef;
+	position: relative;
+	border-radius: 4px;
+	display: inline-flex;
+	padding: 4px;
+	cursor: pointer;
+	user-select: none;
+}
+.toggle-button > div {
+	display: grid;
+	place-items: center;
+	width: 7em;
+	height: 2em;
+}
+.toggle-button > .slider {
+	position: absolute;
+	border-radius: 4px;
+	background-color: #a2d2ff;
+	transition: 0.4s;
+}
+.toggle-button > .slider.right {
+	transform: translateX(100%);
+	background-color: #ffafcc;
+}
+.toggle-button > .display-text {
+	position: relative;
+	z-index: 1;
 }
 </style>
