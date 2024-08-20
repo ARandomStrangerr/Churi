@@ -36,7 +36,7 @@ import Axios from "axios";
 			<td>{{ product.category }}</td>
 			<td>
 				<div class="toggle-button" @click="togglePublicationStatus(index)">
-					<div :class="{'slider':true, 'right':!product.published}" ref="toggle-highlight"></div>
+					<div :class="{'slider':true, 'right':!product.published}"></div>
 					<div class="display-text">Published</div>
 					<div class="display-text">Unpublished</div>
 				</div>
@@ -57,6 +57,7 @@ export default {
 	inject: ["expressAddress"],
 	data() {
 		return {
+			productIndex: 0,
 			message: "",
 			productList: []
 		}
@@ -79,12 +80,13 @@ export default {
 				}).catch((data) => {
 					notification().addNotification(data.response.data, "red");
 				});
-			else
-				Axios.put(`${this.expressAddress}/user-management/change-publication-status/${tokkens[4]}}`
+			else if (tokkens[3] === "change-publication-status")	
+				Axios.patch(`${this.expressAddress}/user-management/update-product-publication/${tokkens[4]}`
 				).then((data) => {
-
+					this.productList[this.productIndex].published = !this.productList[this.productIndex].published;
+					notification().addNotification(data.data, "green");
 				}).catch((data) => {
-
+					console.log(data);
 				});
 		},
 		onDeclineDialogue() {
@@ -92,8 +94,8 @@ export default {
 		},
 		togglePublicationStatus(index){
 			this.message = `Confirm to change the publication status of ${this.productList[index]._id} - ${this.productList[index].name}?`;
+			this.productIndex = index;
 			this.$router.push(`/user-management/product-list/change-publication-status/${this.productList[index]._id}`);
-			// this.$refs["toggle-highlight"][index].classList.toggle("right");
 		}
 	},
 	mounted() {

@@ -3,4 +3,4 @@ node_modules
 .DS_Store
 test/out
 test/test.iml
-back-end/image-folder
+back-end/image-folder/*

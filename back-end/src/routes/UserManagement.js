@@ -16,6 +16,7 @@ ROUTER.get("/get-product-list", isAdminOrVendor, getProducts);
 ROUTER.post("/create-product", isAuthorized, isAdminOrVendor, UPLOAD.array("uploadFile"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
 ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
+ROUTER.patch("/update-product-publication/:id", updateProductPublication);
 ROUTER.delete("/delete-product/:id", deleteProduct);
 ROUTER.get("/get-image/:productId/:id", isAdminOrVendor, getImage);
 
@@ -109,9 +110,18 @@ async function updateProduct(request, response) {
 		}
 	}
 	// delete unused image on update
-	const oldObject = await DATABASE.updateProduct(request.params.id, request.body.name, request.body.category, request.body.description, request.body.varaint);
+	const oldObject = await DATABASE.updateProduct(request.params.id, request.body.name, null, request.body.category, request.body.description, request.body.varaint);
 	if (oldObject) response.status(200).send("Successfully update product");
 	else response.status(404).send("The porduct does not exists");
+}
+
+async function updateProductPublication(request, response) {
+	let productPublication = await DATABASE.getProduct(request.params.id, "published variant", "variant");
+	DATABASE.updateProduct(request.params.id, null, !productPublication.published, null, null, null);
+	for (let variant of productPublication.variant)
+		for (let file of variant.image)
+			FILE_SYSTEM.renameSync(PATH.join(__dirname, "..", "..", "image-folder", productPublication.published?"published-product":"unpublished-product", file), PATH.join(__dirname, "..", "..", "image-folder", productPublication.published?"unpublished-product":"published-product", file));
+	response.status(200).send("Successfully published the product");
 }
 
 async function deleteProduct(request, response) {
