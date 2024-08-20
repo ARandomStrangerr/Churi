@@ -123,8 +123,10 @@ export default {
 					discount: variant.discount
 				};
 				for (let imageFile of variant.imageFiles){
-					formData.append("uploadFile", imageFile);
-					temp.imageFileName.push(imageFile.name);
+					if (typeof imageFile === "object") {
+						formData.append("uploadFile", imageFile);
+						temp.imageFileName.push(imageFile.name);
+					} else temp.imageFileName.push(imageFile);
 				}
 				formData.append("variant[]", JSON.stringify(temp));
 			}

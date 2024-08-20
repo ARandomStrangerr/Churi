@@ -35,23 +35,13 @@ const VARIANT_SCHEMA = MONGOOSE.Schema({
 	discount: { type: Number }
 });
 const VARIANT_MODEL = MONGOOSE.model("Variant", VARIANT_SCHEMA);
- /**
- * open a connection to the database with given params
- * @param {String} hostname
- * @param {Number} port
- * @param {String} database
- */
+
 function connect(hostname, port, database){
 	MONGOOSE.connect(`mongodb://${hostname}:${port}/${database}`);
 }
 
- /**
- * create an user with the given information
- * @param {String} username
- * @param {String} password
- * @param {String} email
- * @returns boolean value which indicates that the user is created or not
- */
+// CRUD user list
+
 async function signUp(username, password, email){
 	const salt = await BCRYPT.genSalt(10);
 	const hashedPassword = await BCRYPT.hash(password, salt);
@@ -69,24 +59,12 @@ async function signUp(username, password, email){
 	}
 }
 
- /**
- * check the username and password match any record in the database
- * @param {String} username
- * @param {String} password
- * @returns an object with userId and their role if the a match found. null otherwise.
- */
 async function signInUsername(username, password){
 	const user = await USER_MODEL.findOne({username});
 	if (!user || !(await BCRYPT.compare(password, user.password))) return null;
 	return { id: user._id, role: user.role };
 }
 
- /**
- * return a number of user that segmented into pages
- * @param {Number} limit: number of user per page
- * @param {Number} skip: skip number of results
- * @return an object that create
- */
 async function getUserList(limit, skip){
 	return await USER_MODEL.find().skip(skip).limit(limit).select("_id username email role");
 }
@@ -94,6 +72,8 @@ async function getUserList(limit, skip){
 function deleteUser(id){
 	return USER_MODEL.findByIdAndDelete(id);
 }
+
+// CRUD products
 
 async function createProduct(creatorId, name, category, description, variant){
 	try{
@@ -141,22 +121,24 @@ async function getProducts(limit, skip) {
 	return productList;
 }
 
-async function updateProduct(productId, name, imageFileName, desc, stock, price, discount){
-	let productUpdate = {
-		name: name,
-		img: imageFileName,
-		desc: desc,
-		stock: stock,
-		price: price,
-		discount: discount
-	}
-	const dataBeforeUpdate = await PRODUCT_MODEL.findById(productId);
-	await PRODUCT_MODEL.findByIdAndUpdate(productId, productUpdate, {new: true});
-	return dataBeforeUpdate.img;
-}
-
 async function getProduct(id) {
 	return await PRODUCT_MODEL.findById(id).select("userId name cateogry description variant").populate("userId variant category").lean();
+}
+
+function getProductCard(){
+	return PRODUCT_MODEL.find().select("name price stock img").lean();
+}
+
+async function updateProduct(productId, name, cateogry, description, variant) {
+	let updateProductObject = {
+		name: name,
+		cateogry: cateogry,
+		description: description,
+		variant: variant
+	}
+	const dataBeforeUpdate = await PRODUCT_MODEL.findById(productId).populate("userId variant").lean();
+	await PRODUCT_MODEL.findByIdAndUpdate(productId,updateProductObject, { new: true });
+	return dataBeforeUpdate;
 }
 
 async function deleteProduct(id) {
@@ -166,10 +148,6 @@ async function deleteProduct(id) {
 		console.log(e);
 		return false;
 	}
-}
-
-function getProductCard(){
-	return PRODUCT_MODEL.find().select("name price stock img").lean();
 }
 
 module.exports = {

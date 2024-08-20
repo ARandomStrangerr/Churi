@@ -75,14 +75,6 @@ async function getProduct(request, response) {
 	}
 }
 
- /**
- * request.body should include:
- * name: name of the product
- * description: description of the product
- * prodcutImage: the list of image files of the product
- * discount: discount price
- * price: price of the product
- */
 async function createProduct(request, response){
 	let fileNameIndex = [];
 	request.files.forEach((file) => {fileNameIndex.push(file.originalname)});
@@ -97,13 +89,20 @@ async function createProduct(request, response){
 }
 
 async function updateProduct(request, response) {
-	for (let file of request.files) request.body.imageName[request.body.imageName.indexOf(file.originalname)] = file.filename;
-	let oldImageFileName = await DATABASE.updateProduct(request.params.id, request.body.name, request.body.imageName, request.body.desc, request.body.stock, request.body.prince, request.body.discount);
-	if (oldImageFileName) {
-		response.status(200).send(`Successfully update item ${request.params.id}`);
-	} else {
-		response.status(400).send("Cannot update the item");
+	let fileNameIndex = [];
+	request.files.forEach((files) => { fileNameIndex.push(files.originalname) });
+	for (let variantInded in request.body.variant) {
+		request.body.variant[variantInded] = JSON.parse(request.body.variant[variantInded]);
+		console.log(request.body.variant[variantInded]);
+		for (let fileIndex in request.body.variant[variantInded].imageFileName) {
+			if (request.body.variant[variantInded].imageFileName[fileIndex].includes("."))
+				request.body.varaint[variantInded].imageFileName[fileIndex] = request.files[fileNameIndex.indexOf(request.body.varaint[variantInded].imageFileName[fileIndex].filename)];
+		}
 	}
+	// delete unused image on update
+	const oldObject = await DATABASE.updateProduct(request.params.id, request.body.name, request.body.category, request.body.description, request.body.varaint);
+	if (oldObject) response.status(200).send("Successfully update product");
+	else response.status(404).send("The porduct does not exists");
 }
 
 async function deleteProduct(request, response) {
@@ -115,8 +114,10 @@ async function deleteProduct(request, response) {
 	}
 	else response.status(400).send("Fail to delete the product");
 }
-module.exports = ROUTER;
 
 async function serveImage(request, response) {
 	response.sendFile(PATH.join(__dirname, "..", "..", "image-folder", "unpublished-product", request.params.id));
 }
+
+module.exports = ROUTER;
+
