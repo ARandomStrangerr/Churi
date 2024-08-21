@@ -137,7 +137,6 @@ async function updateProduct(productId, name, published, category, description, 
 	if (description) updateProductObject.description = description;
 	if (variant) {
 		updateProductObject.variant = [];
-		console.log(variant);
 		for (let v of variant) {
 			await VARIANT_MODEL.findByIdAndUpdate(v._id, v);
 			updateProductObject.variant.push(v._id);
