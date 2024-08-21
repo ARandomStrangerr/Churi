@@ -81,7 +81,7 @@ export default {
 		addVariant(){
 			this.variants.push({
 				name: "",
-				imageFile: [],
+				imageFiles: [],
 				stock: 0,
 				price: 0,
 				discount: 0
@@ -154,6 +154,7 @@ export default {
 				this.category = data.data.category;
 				this.description = data.data.description;
 				this.variants = data.data.variant;
+				console.log(data.data.variant);
 				for (let variant of this.variants) {
 					variant.imageFiles = variant.image;
 					delete variant.image;
