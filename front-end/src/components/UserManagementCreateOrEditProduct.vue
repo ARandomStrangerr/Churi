@@ -116,6 +116,7 @@ export default {
 			formData.append("description", this.description);
 			for (let variant of this.variants) {
 				let temp = {
+					_id: variant._id,
 					name: variant.name,
 					imageFileName: [],
 					stock: variant.stock,

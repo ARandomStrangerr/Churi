@@ -103,21 +103,19 @@ async function updateProduct(request, response) {
 	request.files.forEach((files) => { fileNameIndex.push(files.originalname) });
 	for (let variantInded in request.body.variant) {
 		request.body.variant[variantInded] = JSON.parse(request.body.variant[variantInded]);
-		console.log(request.body.variant[variantInded]);
 		for (let fileIndex in request.body.variant[variantInded].imageFileName) {
 			if (request.body.variant[variantInded].imageFileName[fileIndex].includes("."))
 				request.body.varaint[variantInded].imageFileName[fileIndex] = request.files[fileNameIndex.indexOf(request.body.varaint[variantInded].imageFileName[fileIndex].filename)];
 		}
 	}
 	// delete unused image on update
-	const oldObject = await DATABASE.updateProduct(request.params.id, request.body.name, null, request.body.category, request.body.description, request.body.varaint);
+	const oldObject = await DATABASE.updateProduct(request.params.id, request.body.name, null, request.body.category, request.body.description, request.body.variant);
 	if (oldObject) response.status(200).send("Successfully update product");
 	else response.status(404).send("The porduct does not exists");
 }
 
 async function updateProductPublication(request, response) {
 	let productPublication = await DATABASE.getProduct(request.params.id, "published variant", "variant");
-	console.log(productPublication.published);
 	await DATABASE.updateProduct(request.params.id, null, !productPublication.published, null, null, null);
 	for (let variant of productPublication.variant)
 		for (let file of variant.image)

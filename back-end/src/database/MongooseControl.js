@@ -126,17 +126,23 @@ async function getProduct(id, field, populateField) {
 }
 
 function getProductCard(){
-	return PRODUCT_MODEL.find().select("name price stock img").lean();
+	return PRODUCT_MODEL.find().select("name variant").populate("variant").lean();
 }
 
-async function updateProduct(productId, name, published, cateogry, description, variant) {
+async function updateProduct(productId, name, published, category, description, variant) {
 	let updateProductObject = {};
 	if (name) updateProductObject.name = name;
 	if (published != null) updateProductObject.published = published;
-	if (cateogry) updateProductObject.category= cateogry;
+	if (category) updateProductObject.category = (await CATEGORY_MODEL.findOne({name: category}))._id;
 	if (description) updateProductObject.description = description;
-	if (variant) updateProductObject.variant = variant;
-	console.log(updateProductObject);
+	if (variant) {
+		updateProductObject.variant = [];
+		console.log(variant);
+		for (let v of variant) {
+			await VARIANT_MODEL.findByIdAndUpdate(v._id, v);
+			updateProductObject.variant.push(v._id);
+		}
+	}
 	const dataBeforeUpdate = await PRODUCT_MODEL.findById(productId).populate("userId variant").lean();
 	await PRODUCT_MODEL.findByIdAndUpdate(productId,updateProductObject, { new: true });
 	return dataBeforeUpdate;

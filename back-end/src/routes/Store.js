@@ -1,13 +1,27 @@
-const ROUTER = require("express").Router();
+const EXPRESS = require("express");
+const PATH = require("path");
+
+const ROUTER = EXPRESS.Router();
 const DATABASE = require("../database/MongooseControl");
+
+ROUTER.use(EXPRESS.static(PATH.join(__dirname, "..", "..", "image-folder", "published-product")));
 
 ROUTER.get("/get-product-card", getProductCard);
 ROUTER.get("/get-product/:id", getSingleProduct);
+ROUTER.get("/get-image/:fileName", getImage);
 
 async function getProductCard(request, response) {
-	let cards = await DATABASE.getProductCard();
-	//for (let card of cards) card.img = card.img[0];
-	response.status(200).send(cards);
+	let products = await DATABASE.getProductCard();
+	for (let product of products) {
+		product.image = [];
+		product.price = 0;
+		for (let variant of product.variant) {
+			product.image.push(variant.image[0]);
+			product.price = product.price > variant.price ? product.price : variant.price;
+		}
+		delete product.variant;
+	}
+	response.status(200).send(products);
 }
 
 async function getSingleProduct(request, response) {
@@ -16,6 +30,10 @@ async function getSingleProduct(request, response) {
 		
 		response.status(200).json(product);
 	} else response.status(404).send("No product is found");
+}
+
+function getImage(request, response) {
+	response.sendFile(`../../image-folder/published-product/${request.params.fileName}`);
 }
 
 module.exports = ROUTER;

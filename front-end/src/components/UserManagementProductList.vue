@@ -73,7 +73,7 @@ export default {
 		onConfirmDialogue() {
 			const tokkens = this.$route.path.split("/");
 			this.$router.push("/user-management/product-list");
-			if (tokkens[3] === "delete Product")
+			if (tokkens[3] === "delete-product")
 				Axios.delete(`${this.expressAddress}/user-management/delete-product/${tokkens[4]}`
 				).then((data) => {
 					notification().addNotification(data.data, "green");

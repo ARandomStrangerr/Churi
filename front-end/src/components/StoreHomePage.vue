@@ -7,7 +7,7 @@ import Axios from "axios";
 	<div>
 		<h1>New Arrival</h1>
 		<RouterLink class="product-card" :to="imgProductPath(product._id)" v-for="(product, index) of newArrivalProducts" :key="index">
-			<div><img :src="imgSrc(product.img)"></div>
+			<div><img :src="`${expressAddress}/store/get-image/${product}`"></div>
 			<div>{{product.name}}</div>
 			<div>${{product.price}} CAD</div>
 		</RouterLink>
