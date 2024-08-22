@@ -6,8 +6,8 @@ import Axios from "axios";
 <div class="regular-main-page-width">
 	<div>
 		<h1>New Arrival</h1>
-		<RouterLink class="product-card" :to="imgProductPath(product._id)" v-for="(product, index) of newArrivalProducts" :key="index">
-			<div><img v-for="(img, imgIndex) in product.image" :key="imgIndex" :src="`${expressAddress}/store/get-image/${img}`"></div>
+		<RouterLink class="product-card" :to="`/product/${product._id}`" v-for="(product, index) of newArrivalProducts" :key="index" @mouseover="mouseover(product)" @mouseout="mouseout(product)">
+			<div><img v-for="(img, imgIndex) in product.image" :key="imgIndex" :src="`${expressAddress}/store/get-image/${img}`" :class="{'active': product.featureImage === imgIndex}"></div>
 			<div>{{product.name}}</div>
 			<div>${{product.price}} CAD</div>
 		</RouterLink>
@@ -24,22 +24,38 @@ export default {
 		}
 	},
 	methods: {
-		imgSrc(imgFileName){
-			return `${this.expressAddress}/image/products/${imgFileName}`;
+		waitFunction(milliseconds) {
+			return new Promise((resolve, reject) => { setTimeout(resolve, milliseconds) });
 		},
-		imgProductPath(imgFileId){
-			return `/product/${imgFileId}`
+		async mouseover(product) {
+			if (product.mouseon) {
+				console.log("termination due to another instance");
+				return;
+			}
+			product.mouseon = true;
+			let count = 0;
+			while (product.mouseon) {
+				product.featureImage = (product.featureImage + 1) % product.image.length;
+				console.log (count += 1);
+				await this.waitFunction(3000);
+			}
+			return;
+		},
+		mouseout(product) {
+			product.mouseon = false;
 		}
 	},
 	mounted() {
 		Axios.get(`${this.expressAddress}/store/get-product-card`
 		).then((data) => {
-			console.log(data.data);
 			this.newArrivalProducts = data.data;
+			for (let product of this.newArrivalProducts) {
+				product.featureImage = 0;
+			}
 		}).catch((data) => {
 			console.log(data);
-		})
-	}	
+		});
+	}
 }
 </script>
 
@@ -65,11 +81,20 @@ export default {
 	border-radius: 4px;
 	object-fit: contain;
 	position: absolute;
+	opacity: 0;
+	transition: ease-out 0.4s;
+}
+.product-card img.active {
+	opacity: 1;
 }
 .product-card > div:nth-child(1) {
 	width: 200px;
 	height: 200px;
 	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
 }
 .product-card > div:nth-child(2), .product-card > div:nth-child(3) {
 	width: 100%;
