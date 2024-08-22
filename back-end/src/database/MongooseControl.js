@@ -4,6 +4,7 @@ const BCRYPT = require("bcryptjs");
 const USER_SCHEMA = MONGOOSE.Schema({
 	username: {type: String, unique: true, required: true},
 	password: {type: String, required: true},
+	displayName: {type: String},
 	email: {type: String, unique: true, required: true},
 	role: {type: String, enum: ["admin", "vendor", "employee", "customer"], default: "customer"}
 });
@@ -40,7 +41,7 @@ function connect(hostname, port, database){
 	MONGOOSE.connect(`mongodb://${hostname}:${port}/${database}`);
 }
 
-// CRUD user list
+// CRUD user model
 
 async function signUp(username, password, email){
 	const salt = await BCRYPT.genSalt(10);
@@ -67,6 +68,21 @@ async function signInUsername(username, password){
 
 async function getUserList(limit, skip){
 	return await USER_MODEL.find().skip(skip).limit(limit).select("_id username email role");
+}
+
+async function updateUser(userId, displayName, phoneNumber, email, address, role){
+	let updateUserObject = {};
+	if (displayName) updateUserObject.displayName = displayName;
+	if (phoneNumber) updateUserObject.phoneNumber = phoneNumber;
+	if (email) updateUserObject.email = email;
+	if (role) updateUserObject.role = role;
+	try {
+		await USER_MODEL.findByIdAndUpdate(userId, updateUserObject);
+		return true;
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
 }
 
 function deleteUser(id){
@@ -168,6 +184,7 @@ module.exports = {
 	createProduct: createProduct,
 	signUp: signUp,
 	signInUsername: signInUsername,
+	updateUser: updateUser,
 	deleteUser: deleteUser,
 	getUserList: getUserList,
 	getProducts: getProducts,

@@ -35,8 +35,8 @@ import { RouterLink, RouterView } from "vue-router";
 				<SelectorComponent :options="roleOptions" :defaultValue="user.role" @onChange="(newValue) => {onChangeRole(newValue, index)}"/>
 			</td>
 			<td class="flex-row">
-				<div class="button small-button red" @click="onDeleteUser(index)"><TrashBinIcon/></div>
 				<div class="button small-button yellow"><StatisticIcon /></div>
+				<div class="button small-button red" @click="onDeleteUser(index)"><TrashBinIcon/></div>
 			</td>
 		</tr>
 	</tbody>
@@ -50,6 +50,7 @@ export default {
 	data() {
 		return {
 			displayMessage: "",
+			newRole: "",
 			roleOptions: ['admin', 'customer', 'employee', 'vendor'],
 			userList: [],
 			columnName: ["Username", "Role", "Email", "Action"],
@@ -59,7 +60,6 @@ export default {
 	methods: {
 		onConfirm() {
 			const tokken = this.$route.path.split("/");
-			console.log(tokken);
 			if (tokken[3] === "delete-user")
 				Axios.delete(`${this.expressAddress}/user-management/delete-user/${tokken[4]}`
 				).then((data) => {
@@ -69,12 +69,14 @@ export default {
 					console.log(data.response.data);
 				});
 			else if (tokken[3] === "update-user")
-				Axios.patch(`${this.expressAddress}/user-management/update-user/${tokken[4]}`
-				).then((data) => {
+				Axios.patch(`${this.expressAddress}/user-management/update-user-role/${tokken[4]}`,{
+					newRole: this.newRole
+				}).then((data) => {
 					console.log(data.data);
 				}).catch((data) => {
 					console.log(data.response.data);
 				});
+			this.onDecline();
 		},
 		onDecline() {
 			this.$router.push("/user-management/user-list");
@@ -84,6 +86,7 @@ export default {
 			this.$router.push(`/user-management/user-list/delete-user/${this.userList[index]._id}`);
 		},
 		onChangeRole(newValue, index){
+			this.newRole = newValue;
 			this.displayMessage = `Change role of user ${this.userList[index].username} from ${this.userList[index].role} to ${newValue}?`;
 			this.$router.push(`/user-management/user-list/update-user/${this.userList[index]._id}`);
 		},
@@ -96,8 +99,7 @@ export default {
 			this.userList = data.data;
 		}).catch((data) => {
 			console.log(data);
-			this.$router.push("/sign-in");
-			
+			this.$router.push("/sign-in");	
 		});
 	}
 }
@@ -126,5 +128,12 @@ export default {
 .small-button {
 	width:2em;
 	height:2em;
+}
+.button {
+	border-radius: 4px;
+	margin-right: 1em;
+}
+.button:last-child{
+	margin-right: 0px;
 }
 </style>

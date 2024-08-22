@@ -19,6 +19,7 @@ ROUTER.patch("/update-product/:id", isAuthorized, UPLOAD.array("uploadFile"), up
 ROUTER.patch("/update-product-publication/:id", updateProductPublication);
 ROUTER.delete("/delete-product/:id", deleteProduct);
 ROUTER.get("/get-image/:productId/:id", isAdminOrVendor, getImage);
+ROUTER.patch("/update-user-role/:id", isAuthorized, isAdmin, updateUserRole);
 
  /**
  * check if the session accessing this route is registered
@@ -46,6 +47,11 @@ async function getUserList(request, response) {
 	let skip = parseInt(request.query.page) * limit || 0;
 	let result = await DATABASE.getUserList(limit, skip);
 	response.status(200).json(result);
+}
+
+async function updateUserRole(request, response) {
+	if (await DATABASE.updateUser(request.params.id, null, null, null, null, request.body.newRole)) response.status(200).send("Successfully update user role");
+	else response.status(400).send("Failure to update user role");
 }
 
 async function deleteUser(request, response) {
