@@ -51,6 +51,7 @@ export default {
 		return {
 			displayMessage: "",
 			newRole: "",
+			index: 0,
 			roleOptions: ['admin', 'customer', 'employee', 'vendor'],
 			userList: [],
 			columnName: ["Username", "Role", "Email", "Action"],
@@ -72,9 +73,10 @@ export default {
 				Axios.patch(`${this.expressAddress}/user-management/update-user-role/${tokken[4]}`,{
 					newRole: this.newRole
 				}).then((data) => {
-					console.log(data.data);
+					notification().addNotification("Successfully change uer role", "green");
+					this.userList[this.index].role = this.newRole;
 				}).catch((data) => {
-					console.log(data.response.data);
+					console.log(data);
 				});
 			this.onDecline();
 		},
@@ -87,6 +89,7 @@ export default {
 		},
 		onChangeRole(newValue, index){
 			this.newRole = newValue;
+			this.index = index;
 			this.displayMessage = `Change role of user ${this.userList[index].username} from ${this.userList[index].role} to ${newValue}?`;
 			this.$router.push(`/user-management/user-list/update-user/${this.userList[index]._id}`);
 		},
