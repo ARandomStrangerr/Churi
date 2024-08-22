@@ -100,7 +100,7 @@ async function createProduct(creatorId, name, category, description, variant){
 			let newVariant = new VARIANT_MODEL({
 				productId: newProduct._id,
 				name: item.name,
-				image: item.imageFileName,
+				image: item.image,
 				price: item.price,
 				stock: item.stock,
 				discount: item.discount
@@ -138,12 +138,19 @@ async function updateProduct(productId, name, published, category, description, 
 	if (variant) {
 		updateProductObject.variant = [];
 		for (let v of variant) {
-			await VARIANT_MODEL.findByIdAndUpdate(v._id, v);
-			updateProductObject.variant.push(v._id);
+			if (v._id) {
+				await VARIANT_MODEL.findByIdAndUpdate(v._id, v);
+				updateProductObject.variant.push(v._id);
+			} else {
+				v.productId = productId;
+				let newVariant = new VARIANT_MODEL(v);
+				await newVariant.save();
+				updateProductObject.variant.push(newVariant._id);
+			}
 		}
 	}
 	const dataBeforeUpdate = await PRODUCT_MODEL.findById(productId).populate("userId variant").lean();
-	await PRODUCT_MODEL.findByIdAndUpdate(productId,updateProductObject, { new: true });
+	await PRODUCT_MODEL.findByIdAndUpdate(productId, updateProductObject, { new: true });
 	return dataBeforeUpdate;
 }
 

@@ -7,7 +7,7 @@ import Axios from "axios";
 	<div>
 		<h1>New Arrival</h1>
 		<RouterLink class="product-card" :to="imgProductPath(product._id)" v-for="(product, index) of newArrivalProducts" :key="index">
-			<div><img :src="`${expressAddress}/store/get-image/${product}`"></div>
+			<div><img v-for="(img, imgIndex) in product.image" :key="imgIndex" :src="`${expressAddress}/store/get-image/${img}`"></div>
 			<div>{{product.name}}</div>
 			<div>${{product.price}} CAD</div>
 		</RouterLink>
@@ -34,6 +34,7 @@ export default {
 	mounted() {
 		Axios.get(`${this.expressAddress}/store/get-product-card`
 		).then((data) => {
+			console.log(data.data);
 			this.newArrivalProducts = data.data;
 		}).catch((data) => {
 			console.log(data);
@@ -63,10 +64,12 @@ export default {
 	max-height: 100%;
 	border-radius: 4px;
 	object-fit: contain;
+	position: absolute;
 }
 .product-card > div:nth-child(1) {
 	width: 200px;
 	height: 200px;
+	position: relative;
 }
 .product-card > div:nth-child(2), .product-card > div:nth-child(3) {
 	width: 100%;
