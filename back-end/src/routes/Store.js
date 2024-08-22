@@ -26,14 +26,13 @@ async function getProductCard(request, response) {
 
 async function getSingleProduct(request, response) {
 	let product = await DATABASE.getProduct(request.params.id);
-	if (product) {
-		
+	if (product) {	
 		response.status(200).json(product);
 	} else response.status(404).send("No product is found");
 }
 
 function getImage(request, response) {
-	response.sendFile(`../../image-folder/published-product/${request.params.fileName}`);
+	response.sendFile(PATH.join(__dirname, "..", "..", "image-folder", "published-product", request.params.fileName));
 }
 
 module.exports = ROUTER;

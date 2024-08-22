@@ -15,7 +15,7 @@ ROUTER.delete("/delete-user/:id", isAdmin, deleteUser);
 ROUTER.get("/get-product-list", isAdminOrVendor, getProducts);
 ROUTER.post("/create-product", isAuthorized, isAdminOrVendor, UPLOAD.array("uploadFile"), createProduct);
 ROUTER.get("/get-product/:id", isAuthorized, getProduct);
-ROUTER.patch("/update-product/:id", UPLOAD.array("uploadImageFiles"), updateProduct);
+ROUTER.patch("/update-product/:id", isAuthorized, UPLOAD.array("uploadFile"), updateProduct);
 ROUTER.patch("/update-product-publication/:id", updateProductPublication);
 ROUTER.delete("/delete-product/:id", deleteProduct);
 ROUTER.get("/get-image/:productId/:id", isAdminOrVendor, getImage);
@@ -93,6 +93,7 @@ async function createProduct(request, response){
 		for (let fileIndex in request.body.variant[variantIndex].imageFileName) {
 			request.body.variant[variantIndex].imageFileName[fileIndex] = request.files[fileNameIndex.indexOf(request.body.variant[variantIndex].imageFileName[fileIndex])].filename;
 		}
+		request.body.variant[variantIndex].image = request.body.variant[variantIndex].imageFileName;
 	}
 	if (await DATABASE.createProduct(request.session.userId, request.body.name, request.body.category, request.body.description, request.body.variant)) response.status(200).send("Successfully create the product");
 	else response.status(400).send("Fail to create the product");
@@ -101,15 +102,20 @@ async function createProduct(request, response){
 async function updateProduct(request, response) {
 	let fileNameIndex = [];
 	request.files.forEach((files) => { fileNameIndex.push(files.originalname) });
-	for (let variantInded in request.body.variant) {
-		request.body.variant[variantInded] = JSON.parse(request.body.variant[variantInded]);
-		for (let fileIndex in request.body.variant[variantInded].imageFileName) {
-			if (request.body.variant[variantInded].imageFileName[fileIndex].includes("."))
-				request.body.varaint[variantInded].imageFileName[fileIndex] = request.files[fileNameIndex.indexOf(request.body.varaint[variantInded].imageFileName[fileIndex].filename)];
+	for (let variantIndex in request.body.variant) {
+		request.body.variant[variantIndex] = JSON.parse(request.body.variant[variantIndex]);
+		for (let fileIndex in request.body.variant[variantIndex].imageFileName) {
+			if (request.body.variant[variantIndex].imageFileName[fileIndex].includes("."))
+				request.body.variant[variantIndex].imageFileName[fileIndex] = request.files[fileNameIndex.indexOf(request.body.variant[variantIndex].imageFileName[fileIndex])].filename;
 		}
+		request.body.variant[variantIndex].image = request.body.variant[variantIndex].imageFileName;
 	}
-	// delete unused image on update
+	// todo delete unused image on update
 	const oldObject = await DATABASE.updateProduct(request.params.id, request.body.name, null, request.body.category, request.body.description, request.body.variant);
+	// move file to published folder
+	if (oldObject.published)
+		for (let file of request.files)
+			FILE_SYSTEM.renameSync(PATH.join(__dirname, "..", "..", "image-folder", "unpublished-product", file.filename), PATH.join(__dirname, "..", "..", "image-folder", "published-product", file.filename));
 	if (oldObject) response.status(200).send("Successfully update product");
 	else response.status(404).send("The porduct does not exists");
 }
