@@ -7,6 +7,7 @@ import { RouterLink } from "vue-router";
 		<RouterLink to="/"><img src="../assets/logo-1.png" alt="logo"></RouterLink>
 		<RouterLink to="/user-management/user-list">User List</RouterLink>
 		<RouterLink to="/user-management/product-list">Product List</RouterLink>
+		<RouterLink to="/user-management/calendar">Calendar</RouterLink>
 	</div>
 </template>
 

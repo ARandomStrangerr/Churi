@@ -11,6 +11,7 @@ import CreateUserComponent from "../components/UserManagementCreateUser.vue";
 import ConfirmationDialogeComponent from "../components/ConfirmationDialog.vue";
 import SingleItemComponent from "../components/StoreIndividulaProduct.vue";
 import VendorPerformanceDashboardComponent from "../components/UserManagementVendorPerformanceDashboard.vue"
+import CalendarComponent from "../components/UserManagementCalendar.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -97,6 +98,11 @@ const router = createRouter({
 					path: '/user-management/edit-product/:id',
 					name: "EditProduct",
 					component: CreateOrEditProductComponenet
+				},
+				{
+					path: '/user-management/calendar',
+					name: '/calendar',
+					component: CalendarComponent
 				}
 			]
 		}
