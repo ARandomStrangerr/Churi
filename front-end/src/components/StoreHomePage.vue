@@ -36,7 +36,6 @@ export default {
 			let count = 0;
 			while (product.mouseon) {
 				product.featureImage = (product.featureImage + 1) % product.image.length;
-				console.log (count += 1);
 				await this.waitFunction(3000);
 			}
 			return;

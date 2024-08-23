@@ -20,6 +20,7 @@ import Axios from "axios";
 		<h2>{{ product.ownerName}}</h2>
 		<h1>{{ product.name }}</h1>
 		<div><div v-for="(variant, variantIndex) in product.variant" :key="variantIndex" :class="{'button': true, 'active': variantIndex === featureVariantIndex}" @click="selectVariant(variantIndex)">{{ variant.name }}</div>
+		<h2 v-if="product.variant">${{ Number(product.variant[featureVariantIndex].price).toFixed(2) }} CAD</h2>
 		</div>
 		{{ product.description }}
 	</div>
@@ -52,9 +53,7 @@ export default {
 	},
 	async mounted() {
 		let data = await Axios.get(`${this.expressAddress}/store/get-product/${this.$route.path.split("/")[2]}`);
-		console.log(data);
 		this.product = data.data;
-		console.log(this.product.variant);
 		await this.runSlideShow();
 	}
 }
