@@ -35,7 +35,7 @@ import { RouterLink, RouterView } from "vue-router";
 				<SelectorComponent :options="roleOptions" :defaultValue="user.role" @onChange="(newValue) => {onChangeRole(newValue, index)}"/>
 			</td>
 			<td class="flex-row">
-				<div class="button small-button yellow"><StatisticIcon /></div>
+				<RouterLink :to="`/user-management/vendor-performance-dashboard/${user._id}`"><div class="button small-button yellow"><StatisticIcon /></div></RouterLink>
 				<div class="button small-button red" @click="onDeleteUser(index)"><TrashBinIcon/></div>
 			</td>
 		</tr>

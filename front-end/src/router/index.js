@@ -10,6 +10,7 @@ import CreateOrEditProductComponenet from "../components/UserManagementCreateOrE
 import CreateUserComponent from "../components/UserManagementCreateUser.vue";
 import ConfirmationDialogeComponent from "../components/ConfirmationDialog.vue";
 import SingleItemComponent from "../components/StoreIndividulaProduct.vue";
+import VendorPerformanceDashboardComponent from "../components/UserManagementVendorPerformanceDashboard.vue"
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,11 @@ const router = createRouter({
 					name: 'EditUser',
 				},
 				{
+					path: '/user-management/vendor-performance-dashboard/:id',
+					name: "VendorPerformanceDashboard",
+					component: VendorPerformanceDashboardComponent
+				},
+				{
 					path: '/user-management/product-list',
 					name: "ProductList",
 					component: ProductListComponent,
@@ -80,7 +86,6 @@ const router = createRouter({
 							name: "ChanePublicationStatus",
 							component: ConfirmationDialogeComponent
 						}
-
 					]
 				},
 				{

@@ -6,18 +6,22 @@ import Axios from "axios";
 <div class="regular-main-page-width">
 	<div class="left-display">
 		<div class="feature-image">
-			<div class="slide-show">
-				<div :class="{'slide':true, 'feature-slide': featureIndex === index}" v-for="(image, index) in product.img" :key="index"><img :src="`${expressAddress}/image/products/${image}`"></div>
+			<div class="slide-show" v-if="product.variant">
+				<div :class="{'slide':true, 'feature-slide': featureImageIndex === imageIndex}" v-for="(image, imageIndex) in product.variant[featureVariantIndex].image" :key="imageIndex">
+					<img :src="`${expressAddress}/store/get-image/${image}`">
+				</div>
 			</div>
-			<div class="dots">
-				<div :class="{'dot':true, 'feature-dot': featureIndex === index}" v-for="(image, index) in product.img" :key="index"></div>
+			<div class="dots" v-if="product.variant">
+				<div :class="{'dot':true, 'feature-dot': featureImageIndex === imageIndex}" v-for="(image, imageIndex) in product.variant[featureVariantIndex].image" :key="imageIndex"></div>
 			</div>
 		</div>
 	</div>
 	<div class="right-display">
+		<h2>{{ product.ownerName}}</h2>
 		<h1>{{ product.name }}</h1>
-		<h2>${{ product.price }} CAD</h2>
-		{{ product.desc }}
+		<div><div v-for="(variant, variantIndex) in product.variant" :key="variantIndex" :class="{'button': true, 'active': variantIndex === featureVariantIndex}" @click="selectVariant(variantIndex)">{{ variant.name }}</div>
+		</div>
+		{{ product.description }}
 	</div>
 </div>
 </template>
@@ -27,7 +31,8 @@ export default {
 	inject: ['expressAddress'],
 	data() {
 		return {
-			featureIndex: 0,
+			featureImageIndex: 0,
+			featureVariantIndex: 0,
 			product: {}
 		}
 	},
@@ -36,15 +41,20 @@ export default {
 			return new Promise((resolve, reject) => { setTimeout(resolve, millisecondWait) });
 		},
 		async runSlideShow() {
-			while (true) {
-				this.featureIndex = (this.featureIndex + 1) % this.product.img.length;
+			while (this.product.variant[this.featureVariantIndex].image) {
+				this.featureImageIndex = (this.featureImageIndex + 1) % this.product.variant[this.featureVariantIndex].image.length;	
 				await this.dummyFunction(3000);
 			}
+		},
+		selectVariant(selectedVariantIndex) {
+			this.featureVariantIndex = selectedVariantIndex;
 		}
 	},
 	async mounted() {
 		let data = await Axios.get(`${this.expressAddress}/store/get-product/${this.$route.path.split("/")[2]}`);
+		console.log(data);
 		this.product = data.data;
+		console.log(this.product.variant);
 		await this.runSlideShow();
 	}
 }
@@ -100,6 +110,13 @@ img {
 	margin-right: 0px;
 }
 .feature-dot {
+	background-color: #cdb4db;
+}
+.button {
+	border-color: #cdb4db;
+	margin-right: 1em;
+}
+.button.active{
 	background-color: #cdb4db;
 }
 </style>

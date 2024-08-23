@@ -25,7 +25,10 @@ async function getProductCard(request, response) {
 }
 
 async function getSingleProduct(request, response) {
-	let product = await DATABASE.getProduct(request.params.id);
+	let product = await DATABASE.getProduct(request.params.id, "_id name category description published userId variant", "category userId variant");
+	product.ownerName = product.userId.displayName;
+	delete product.userId;
+	product.category = product.category.name;
 	if (product) {	
 		response.status(200).json(product);
 	} else response.status(404).send("No product is found");
