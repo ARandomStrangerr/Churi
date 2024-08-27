@@ -1,6 +1,7 @@
 <script setup>
 import RightArrowIcon from "./icons/RightArrow.vue";
 import LeftArrowIcon from "./icons/LeftArrow.vue";
+import { RouterView, RouterLink } from "vue-router";
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import LeftArrowIcon from "./icons/LeftArrow.vue";
 		<div><LeftArrowIcon /></div>
 		<div>{{ getMonthName(today.getMonth() + 1, "long") }} {{ today.getFullYear() }}</div>
 		<div><RightArrowIcon /></div>
+		<div class="button"><RouterLink to="/user-management/calendar/create-event">Create Task</RouterLink></div>
 	</div>
 </div>
 <div class="calendar">
@@ -28,6 +30,7 @@ import LeftArrowIcon from "./icons/LeftArrow.vue";
 		</div>
 	</div>
 </div>
+<RouterView />
 </template>
 
 <script>
@@ -113,7 +116,10 @@ export default {
 	text-align: center;
 }
 .banner > div > div {
-	padding-right: 1em;
+	margin-right: 1em;
+}
+.banner > div > div:last-child {
+	margin-right: 0em;
 }
 .calendar {
 	display: flex;
@@ -164,6 +170,12 @@ export default {
 	background-color: #bde0fe;
 }
 .date.today {
+	background-color: #cdb4db;
+}
+.button {
+	border-color: #cdb4db;
+}
+.button:hover {
 	background-color: #cdb4db;
 }
 </style>

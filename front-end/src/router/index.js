@@ -1,8 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import StoreHeaderAndFooterView from "../views/Store.vue"
-import HomePageComponent from "../components/StoreHomePage.vue"
-import SignInScreen from "../views/SignInView.vue"
-import SignUpScreen from "../views/SignUpView.vue"
+import { createRouter, createWebHistory } from 'vue-router';
+import StoreHeaderAndFooterView from "../views/Store.vue";
+import HomePageComponent from "../components/StoreHomePage.vue";
+import SignInScreen from "../views/SignInView.vue";
 import UserManagementScreen from "../views/UserManagementView.vue";
 import UserListComponent from "../components/UserManagementUserList.vue";
 import ProductListComponent from "../components/UserManagementProductList.vue";
@@ -10,8 +9,9 @@ import CreateOrEditProductComponenet from "../components/UserManagementCreateOrE
 import CreateUserComponent from "../components/UserManagementCreateUser.vue";
 import ConfirmationDialogeComponent from "../components/ConfirmationDialog.vue";
 import SingleItemComponent from "../components/StoreIndividulaProduct.vue";
-import VendorPerformanceDashboardComponent from "../components/UserManagementVendorPerformanceDashboard.vue"
+import VendorPerformanceDashboardComponent from "../components/UserManagementVendorPerformanceDashboard.vue";
 import CalendarComponent from "../components/UserManagementCalendar.vue";
+import CreateOrEditEventComponent from "../components/UserManagementCreateOrEditEvent.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -102,7 +102,14 @@ const router = createRouter({
 				{
 					path: '/user-management/calendar',
 					name: '/calendar',
-					component: CalendarComponent
+					component: CalendarComponent,
+					children: [
+						{
+							path: '/user-management/calendar/create-event',
+							name: 'CreateEvent',
+							component: CreateOrEditEventComponent
+						}
+					]
 				}
 			]
 		}
