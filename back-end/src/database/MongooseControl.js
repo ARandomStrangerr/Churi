@@ -39,7 +39,7 @@ const VARIANT_MODEL = MONGOOSE.model("Variant", VARIANT_SCHEMA);
 
 const EVENT_SCHEMA = MONGOOSE.Schema({
 	name: { type: String, requied: true },
-	begin: { type: Date, requied: true },
+	start: { type: Date, requied: true },
 	end: { type: Date, required: true },
 	location: { type: String },
 	participant: [{ type: MONGOOSE.Schema.Types.ObjectId, ref: "User" }]
@@ -188,7 +188,16 @@ async function deleteProduct(id) {
 	}
 }
 
-async function createEvent(name, begin, end, location, participant){}
+function createEvent(name, start, end, location, participant){
+	let newEvent = new EVENT_MODEL({
+		name: name,
+		start: start,
+		end: end,
+		location: location,
+		participant: participant
+	});
+	newEvent.save();
+}
 
 async function getEvents(startTimeRange, endTimeRange){}
 

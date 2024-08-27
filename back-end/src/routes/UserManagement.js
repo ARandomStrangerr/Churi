@@ -20,6 +20,7 @@ ROUTER.patch("/update-product-publication/:id", updateProductPublication);
 ROUTER.delete("/delete-product/:id", deleteProduct);
 ROUTER.get("/get-image/:productId/:id", isAdminOrVendor, getImage);
 ROUTER.patch("/update-user-role/:id", isAuthorized, isAdmin, updateUserRole);
+ROUTER.post("/create-event", createEvent);
 
  /**
  * check if the session accessing this route is registered
@@ -145,5 +146,9 @@ async function deleteProduct(request, response) {
 	else response.status(400).send("Fail to delete the product");
 }
 
-module.exports = ROUTER;
+async function createEvent(request, response) {
+	DATABASE.createEvent(request.body.name, request.body.start, request.body.end, request.body.location, []);
+	response.status(200).send("Successfully create schedule");
+}
 
+module.exports = ROUTER;
