@@ -1,4 +1,5 @@
 <script setup>
+import TagInputComponent from "./TagInput.vue";
 import Veil from "./Veil.vue";
 import { RouterLink } from "vue-router";
 import { notification } from "../stores/Notification.js";
@@ -9,8 +10,10 @@ import Axios from "axios";
 <Veil>
 	<form @submit.prevent="submit">
 		<h1>Create Event</h1>
-		<h2><label for="event-name">Event Name</label></h2>
-		<input type="text" v-model="name">
+		<div>
+			<h2><label for="event-name">Event Name</label></h2>
+			<input type="text" v-model="name">
+		</div>
 		<h2>Time and Date</h2>
 		<div class="date">
 			<div>
@@ -22,14 +25,18 @@ import Axios from "axios";
 				<input type="datetime-local" v-model="endTime">
 			</div>
 		</div>
-		<h2><label for="location">Location</label></h2>
-		<input type="text" v-model="location">
-		<h2><label for="participant">Paticipant</label></h2>
-		<input type="text" v-model="participant">
 		<div>
+			<h2><label for="location">Location</label></h2>
+			<input type="text" v-model="location">
+		</div>
+		<div>
+			<h2><label for="participant">Paticipant</label></h2>
+		 	<TagInputComponent />	
+		</div>
+		<div class="button-wrapper">
 			<div class="button red" v-if="eventId">Delete</div>
-			<RouterLink to="/user-management/calendar"><div class="button yellow">Cancel</div></RouterLink>
-			<button class="button green">Create Event</button>
+			<div class="button yellow" @click="this.$router.push('/user-management/calendar')">Cancel</div>
+			<div class="button green">Create Event</div>
 		</div>
 	</form>
 </Veil>
@@ -62,6 +69,14 @@ export default {
 				console.log(data);
 			});
 		}
+	},
+	mounted() {
+		Axios.get(`${this.expressAddress}/user-management/get-employee-list`
+		).then((data) => {
+			console.log(data);
+		}).catch((data) => {
+			console.log(data);
+		});
 	}
 }
 </script>
@@ -72,6 +87,9 @@ form {
 	border-radius: 10px;
 	padding: 5em;
 }
+form > div {
+	margin-top: 1em;
+}
 .date {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -79,7 +97,17 @@ form {
 input {
 	width: 100%;
 }
+.button-wrapper {
+	display: flex;
+	flex-direction: row;
+}
 .button {
 	border-radius: 4px;
+	flex-grow: 1;
+	flex-basis: 0;
+	margin-right: 1em;
+}
+.button:last-child{
+	margin-right: 0em;
 }
 </style>

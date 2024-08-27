@@ -79,6 +79,10 @@ async function getUserList(limit, skip){
 	return await USER_MODEL.find().skip(skip).limit(limit).select("_id username email role");
 }
 
+async function getEmployeeList() {
+	return await USER_MODEL.find({role: "employee"}).lean();
+}
+
 async function updateUser(userId, displayName, phoneNumber, email, address, role){
 	let updateUserObject = {};
 	if (displayName) updateUserObject.displayName = displayName;
@@ -224,5 +228,6 @@ module.exports = {
 	getEvents: getEvents,
 	getEvent: getEvent,
 	updateEvent: updateEvent,
-	deleteEvent: deleteEvent
+	deleteEvent: deleteEvent,
+	getEmployeeList: getEmployeeList
 }

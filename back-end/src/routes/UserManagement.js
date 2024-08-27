@@ -20,7 +20,8 @@ ROUTER.patch("/update-product-publication/:id", updateProductPublication);
 ROUTER.delete("/delete-product/:id", deleteProduct);
 ROUTER.get("/get-image/:productId/:id", isAdminOrVendor, getImage);
 ROUTER.patch("/update-user-role/:id", isAuthorized, isAdmin, updateUserRole);
-ROUTER.post("/create-event", createEvent);
+ROUTER.post("/create-event", isAuthorized, createEvent);
+ROUTER.get("/get-employee-list", getEmployeeList);
 
  /**
  * check if the session accessing this route is registered
@@ -151,4 +152,13 @@ async function createEvent(request, response) {
 	response.status(200).send("Successfully create schedule");
 }
 
+async function getEmployeeList(request, response) {
+	let data = await DATABASE.getEmployeeList();
+	for (let employee of data) {
+		delete employee.email;
+		delete employee.password;
+		delete employee.role;
+	}
+	response.status(200).json(data);
+}
 module.exports = ROUTER;
