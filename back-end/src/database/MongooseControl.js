@@ -37,6 +37,15 @@ const VARIANT_SCHEMA = MONGOOSE.Schema({
 });
 const VARIANT_MODEL = MONGOOSE.model("Variant", VARIANT_SCHEMA);
 
+const EVENT_SCHEMA = MONGOOSE.Schema({
+	name: { type: String, requied: true },
+	begin: { type: Date, requied: true },
+	end: { type: Date, required: true },
+	location: { type: String },
+	participant: [{ type: MONGOOSE.Schema.Types.ObjectId, ref: "User" }]
+})
+const EVENT_MODEL = MONGOOSE.model("Event", EVENT_SCHEMA);
+
 function connect(hostname, port, database){
 	MONGOOSE.connect(`mongodb://${hostname}:${port}/${database}`);
 }
@@ -179,6 +188,16 @@ async function deleteProduct(id) {
 	}
 }
 
+async function createEvent(name, begin, end, location, participant){}
+
+async function getEvents(startTimeRange, endTimeRange){}
+
+async function getEvent(eventId){}
+
+async function updateEvent(eventId, begin, end, locaiton, participant){}
+
+async function deleteEvent(eventId){}
+
 module.exports = {
 	connect: connect,
 	createProduct: createProduct,
@@ -191,5 +210,10 @@ module.exports = {
 	getProduct: getProduct,
 	updateProduct: updateProduct,
 	deleteProduct: deleteProduct,
-	getProductCard: getProductCard
+	getProductCard: getProductCard,
+	createEvent: createEvent,
+	getEvents: getEvents,
+	getEvent: getEvent,
+	updateEvent: updateEvent,
+	deleteEvent: deleteEvent
 }
